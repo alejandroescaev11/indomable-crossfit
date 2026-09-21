@@ -1,0 +1,47 @@
+# ===========================
+# Dependencias
+# ===========================
+node_modules/
+
+# ===========================
+# Build outputs
+# ===========================
+build/
+dist/
+dev-dist/
+coverage/
+
+# ===========================
+# Variables de entorno (SECRETOS — NUNCA subir)
+# ===========================
+.env
+.env.local
+.env.production
+.env.*.local
+# Se permite el ejemplo de referencia:
+!.env.example
+
+# ===========================
+# Firebase / Hosting
+# ===========================
+.firebase/
+
+# ===========================
+# Sistema Operativo
+# ===========================
+.DS_Store
+Thumbs.db
+
+# ===========================
+# Editor / IDEs
+# ===========================
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ===========================
+# Logs
+# ===========================
+*.log
+npm-debug.log*

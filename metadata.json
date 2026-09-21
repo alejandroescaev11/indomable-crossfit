@@ -1,0 +1,8 @@
+{
+  "name": "INDOMABLE",
+  "description": "PWA para gestión de clases, reservas de cupos, records personales (RM), calculadora de porcentajes y control de suscripciones en INDOMABLE.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
