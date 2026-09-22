@@ -14,6 +14,7 @@ import {
   AthleteDiscipline,
   GymFlyer,
   AnthropometricMeasurement,
+  ProgressPhoto,
   CustomExercise,
   GymSettings,
   MembershipPlan,
@@ -78,6 +79,9 @@ import {
   subscribeAnthropometryLive,
   syncSaveAnthropometry,
   syncDeleteAnthropometry,
+  subscribeProgressPhotosLive,
+  syncSaveProgressPhoto,
+  syncDeleteProgressPhoto,
   subscribeCustomExercisesLive,
   syncSaveCustomExercise,
   subscribeGymSettingsLive,
@@ -224,6 +228,12 @@ interface GymContextType {
   athleteAnthropometry: AnthropometricMeasurement[];
   saveAnthropometry: (record: AnthropometricMeasurement) => Promise<void>;
   deleteAnthropometry: (id: string) => Promise<void>;
+
+  // Progress Photos (Before / After Reel)
+  progressPhotos: ProgressPhoto[];
+  athleteProgressPhotos: ProgressPhoto[];
+  saveProgressPhoto: (photo: ProgressPhoto) => Promise<void>;
+  deleteProgressPhoto: (id: string) => Promise<void>;
 
   // Custom Exercises
   customExercises: CustomExercise[];
@@ -477,6 +487,15 @@ export const GymProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }
   });
 
+  const [progressPhotos, setProgressPhotos] = useState<ProgressPhoto[]>(() => {
+    try {
+      const saved = localStorage.getItem(`${STORAGE_KEY}_progress_photos`);
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
+  });
+
   const [customExercises, setCustomExercises] = useState<CustomExercise[]>(() => {
     try {
       const saved = localStorage.getItem(`${STORAGE_KEY}_custom_exercises`);
@@ -574,6 +593,10 @@ export const GymProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   }, [anthropometricRecords]);
 
   useEffect(() => {
+    localStorage.setItem(`${STORAGE_KEY}_progress_photos`, JSON.stringify(progressPhotos));
+  }, [progressPhotos]);
+
+  useEffect(() => {
     localStorage.setItem(`${STORAGE_KEY}_custom_exercises`, JSON.stringify(customExercises));
   }, [customExercises]);
 
@@ -666,6 +689,14 @@ export const GymProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       .filter((rec) => rec.athleteId === currentAthleteId)
       .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
   }, [anthropometricRecords, currentAthleteId]);
+
+  // Athlete progress photos sorted by date descending
+  const athleteProgressPhotos = useMemo(() => {
+    if (!currentAthleteId) return [];
+    return progressPhotos
+      .filter((p) => p.athleteId === currentAthleteId)
+      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  }, [progressPhotos, currentAthleteId]);
 
   // Current active coach profile
   const currentCoach = useMemo(() => {
@@ -870,6 +901,12 @@ export const GymProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       }
     });
 
+    const unsubProgressPhotos = subscribeProgressPhotosLive((livePhotos) => {
+      if (livePhotos) {
+        setProgressPhotos(livePhotos);
+      }
+    });
+
     const unsubCustomExercises = subscribeCustomExercisesLive((liveExercises) => {
       if (liveExercises) {
         setCustomExercises(liveExercises);
@@ -912,6 +949,7 @@ export const GymProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       unsubAdmin?.();
       unsubFlyers?.();
       unsubAnthropometry?.();
+      unsubProgressPhotos?.();
       unsubCustomExercises?.();
       unsubGymSettings?.();
       unsubPlans?.();
@@ -2416,6 +2454,31 @@ export const GymProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }
   };
 
+  // Progress Photos operations
+  const saveProgressPhoto = async (photo: ProgressPhoto) => {
+    setProgressPhotos((prev) => {
+      const exists = prev.some((p) => p.id === photo.id);
+      if (exists) {
+        return prev.map((p) => (p.id === photo.id ? photo : p));
+      }
+      return [photo, ...prev];
+    });
+    try {
+      await syncSaveProgressPhoto(photo);
+    } catch (e) {
+      console.warn('Error syncing progress photo to Firestore:', e);
+    }
+  };
+
+  const deleteProgressPhoto = async (id: string) => {
+    setProgressPhotos((prev) => prev.filter((p) => p.id !== id));
+    try {
+      await syncDeleteProgressPhoto(id);
+    } catch (e) {
+      console.warn('Error deleting progress photo from Firestore:', e);
+    }
+  };
+
   // Custom Exercises operations
   const addCustomExercise = async (name: string, category: 'olympic' | 'powerlifting' | 'gymnastic' | 'bodybuilding' | 'other' = 'bodybuilding') => {
     const trimmed = name.trim();
@@ -2613,6 +2676,10 @@ export const GymProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         athleteAnthropometry,
         saveAnthropometry,
         deleteAnthropometry,
+        progressPhotos,
+        athleteProgressPhotos,
+        saveProgressPhoto,
+        deleteProgressPhoto,
         customExercises,
         addCustomExercise,
         gymSettings,

@@ -70,6 +70,28 @@ El sistema maneja 4 tipos de sesión, todos gestionados por `GymContext`:
 
 ---
 
+### v0.8.0 — 2026-09-21
+**Rama/Commit:** `feat/carrete-fotos-progreso-antes-despues`
+
+#### ✨ Cambios
+- **[ProgressPhotosReelView.tsx]** Nuevo componente completo de seguimiento visual para el Plan Personalizado con:
+  - **Carrete Cronológico**: Galería organizada por fechas con etiquetas de postura (*Frente, Perfil, Espalda, Libre*), peso de referencia y notas de observación.
+  - **Comparador Interactivo Antes / Después**: Selector dinámico de fotografías para visualización lado a lado (Side-by-Side), cálculo automático de días y semanas transcurridos, y variación neta de peso.
+  - **Subida Optimizada de Fotos**: Selector de cámara/archivo con compresión client-side automática (`compressImageFile`) para optimizar almacenamiento y velocidad.
+  - **Visor Fullscreen**: Modo de pantalla completa de alta resolución para inspección detallada.
+- **[AnthropometryView.tsx]** Añadido selector superior de subsecciones: **"Carrete & Antes/Después"** y **"Medidas Antropométricas"**.
+- **[GymContext.tsx & firestoreService.ts]** Sincronización en tiempo real de la colección `progress_photos` en Firestore y almacenamiento local en `localStorage`.
+- **[types/index.ts]** Definidos tipos `ProgressPhoto` y `ProgressPhotoPose`.
+
+#### 🗂️ Archivos Modificados / Creados
+- `src/components/athlete/ProgressPhotosReelView.tsx` [NUEVO]
+- `src/components/athlete/AnthropometryView.tsx`
+- `src/context/GymContext.tsx`
+- `src/services/firestoreService.ts`
+- `src/types/index.ts`
+
+---
+
 ### v0.7.0 — 2026-09-21
 **Rama/Commit:** `feat/ingreso-solo-en-inicio`
 

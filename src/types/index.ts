@@ -187,6 +187,20 @@ export interface AnthropometricMeasurement {
   createdAt: string;
 }
 
+export type ProgressPhotoPose = 'frente' | 'perfil' | 'espalda' | 'libre';
+
+export interface ProgressPhoto {
+  id: string;
+  athleteId: string;
+  date: string; // YYYY-MM-DD
+  imageUrl: string; // Base64 comprimido o URL de imagen
+  pose: ProgressPhotoPose;
+  weightKg?: number; // Peso corporal de referencia opcional
+  notes?: string;
+  evaluatorName?: string; // Nombre de quien la subió (Atleta, Coach o Admin)
+  createdAt: string;
+}
+
 export interface CustomExercise {
   id: string;
   name: string;

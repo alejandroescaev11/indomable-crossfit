@@ -22,9 +22,11 @@ import {
   CheckCircle2,
   AlertTriangle,
   HelpCircle,
+  Camera,
 } from 'lucide-react';
 import { useGym } from '../../context/GymContext';
 import { AnthropometricMeasurement } from '../../types';
+import { ProgressPhotosReelView } from './ProgressPhotosReelView';
 
 interface AnthropometryViewProps {
   athleteIdOverride?: string; // Permitir al coach/admin ver las medidas de cualquier atleta específico
@@ -65,6 +67,9 @@ export const AnthropometryView: React.FC<AnthropometryViewProps> = ({ athleteIdO
   const [recordToDelete, setRecordToDelete] = useState<AnthropometricMeasurement | null>(null);
   const [isConfirmSaveOpen, setIsConfirmSaveOpen] = useState(false);
   const [validationError, setValidationError] = useState<string | null>(null);
+
+  // Subsección activa: Fotos de Progreso vs Medidas Corporales
+  const [activeSection, setActiveSection] = useState<'photos' | 'measurements'>('photos');
 
   // Form State
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
@@ -257,17 +262,50 @@ export const AnthropometryView: React.FC<AnthropometryViewProps> = ({ athleteIdO
 
   return (
     <div className="space-y-6 animate-fadeIn pb-12">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 bg-gradient-to-r from-purple-950/40 via-zinc-900 to-zinc-950 p-5 rounded-2xl border border-purple-800/30">
-        <div>
-          <div className="flex items-center gap-2 mb-1">
-            <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-purple-500/20 text-purple-400 border border-purple-500/30 inline-flex items-center gap-1">
-              <Sparkles className="w-3 h-3" />
-              Seguimiento Corporal Personalizado
-            </span>
-          </div>
-          <h1 className="text-2xl sm:text-3xl font-black text-white uppercase font-teko tracking-wide">
-            Medidas Antropométricas & Evolución
+      {/* Selector de Subsección: Fotos de Progreso vs Medidas Corporales */}
+      <div className="grid grid-cols-2 gap-2 p-1.5 rounded-2xl bg-zinc-950 border border-zinc-800 shadow-xl">
+        <button
+          type="button"
+          onClick={() => setActiveSection('photos')}
+          className={`flex items-center justify-center gap-2 py-3 px-3 sm:px-4 rounded-xl text-xs font-black uppercase tracking-wider transition cursor-pointer ${
+            activeSection === 'photos'
+              ? 'bg-gradient-to-r from-red-600 to-red-700 text-white shadow-lg shadow-red-950/60'
+              : 'text-zinc-400 hover:text-white hover:bg-zinc-900'
+          }`}
+        >
+          <Camera className="w-4 h-4" />
+          <span>Carrete & Antes/Después</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setActiveSection('measurements')}
+          className={`flex items-center justify-center gap-2 py-3 px-3 sm:px-4 rounded-xl text-xs font-black uppercase tracking-wider transition cursor-pointer ${
+            activeSection === 'measurements'
+              ? 'bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-lg shadow-purple-950/60'
+              : 'text-zinc-400 hover:text-white hover:bg-zinc-900'
+          }`}
+        >
+          <Ruler className="w-4 h-4" />
+          <span>Medidas Antropométricas</span>
+        </button>
+      </div>
+
+      {activeSection === 'photos' ? (
+        <ProgressPhotosReelView athleteIdOverride={targetAthleteId} />
+      ) : (
+        <>
+          {/* Header */}
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 bg-gradient-to-r from-purple-950/40 via-zinc-900 to-zinc-950 p-5 rounded-2xl border border-purple-800/30">
+            <div>
+              <div className="flex items-center gap-2 mb-1">
+                <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-purple-500/20 text-purple-400 border border-purple-500/30 inline-flex items-center gap-1">
+                  <Sparkles className="w-3 h-3" />
+                  Seguimiento Corporal Personalizado
+                </span>
+              </div>
+              <h1 className="text-2xl sm:text-3xl font-black text-white uppercase font-teko tracking-wide">
+                Medidas Antropométricas & Evolución
           </h1>
           <p className="text-xs sm:text-sm text-zinc-400">
             {targetAthlete
@@ -924,6 +962,8 @@ export const AnthropometryView: React.FC<AnthropometryViewProps> = ({ athleteIdO
             </div>
           </div>
         </div>
+      )}
+        </>
       )}
     </div>
   );

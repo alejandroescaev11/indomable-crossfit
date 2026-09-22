@@ -27,6 +27,7 @@ import {
   AdminSessionLock,
   GymFlyer,
   AnthropometricMeasurement,
+  ProgressPhoto,
   CustomExercise,
   GymSettings,
   MembershipPlan,
@@ -46,6 +47,7 @@ const GYM_SETTINGS_DOC = 'gym_settings';
 const ACTIVITY_LOGS_COL = 'activityLogs';
 const FLYERS_COL = 'flyers';
 const ANTHROPOMETRY_COL = 'anthropometry';
+const PROGRESS_PHOTOS_COL = 'progress_photos';
 const CUSTOM_EXERCISES_COL = 'customExercises';
 const ADMIN_SESSIONS_COL = 'adminSessions';
 const MEMBERSHIP_PLANS_COL = 'membershipPlans';
@@ -801,6 +803,52 @@ export const syncDeleteAnthropometry = async (id: string): Promise<void> => {
   const db = getFirebaseDb();
   if (!db) return;
   const docRef = doc(db, ANTHROPOMETRY_COL, id);
+  await deleteDoc(docRef);
+};
+
+// ==========================================
+// 7.1 FOTOS DE PROGRESO FÍSICO (ANTES / DESPUÉS)
+// ==========================================
+
+export const subscribeProgressPhotosLive = (
+  callback: (photos: ProgressPhoto[]) => void
+): Unsubscribe | null => {
+  const db = getFirebaseDb();
+  if (!db) return null;
+
+  try {
+    const colRef = collection(db, PROGRESS_PHOTOS_COL);
+    const q = query(colRef, orderBy('date', 'desc'));
+    return onSnapshot(
+      q,
+      (snapshot) => {
+        const list: ProgressPhoto[] = [];
+        snapshot.forEach((d) => {
+          list.push({ id: d.id, ...(d.data() as Omit<ProgressPhoto, 'id'>) });
+        });
+        callback(list);
+      },
+      (error) => {
+        console.warn('[Firestore] Error suscribiendo a fotos de progreso:', error);
+      }
+    );
+  } catch (err) {
+    console.warn('[Firestore] Excepción al suscribir a fotos de progreso:', err);
+    return null;
+  }
+};
+
+export const syncSaveProgressPhoto = async (photo: ProgressPhoto): Promise<void> => {
+  const db = getFirebaseDb();
+  if (!db) return;
+  const docRef = doc(db, PROGRESS_PHOTOS_COL, photo.id);
+  await setDoc(docRef, cleanForFirestore(photo), { merge: true });
+};
+
+export const syncDeleteProgressPhoto = async (id: string): Promise<void> => {
+  const db = getFirebaseDb();
+  if (!db) return;
+  const docRef = doc(db, PROGRESS_PHOTOS_COL, id);
   await deleteDoc(docRef);
 };
 
