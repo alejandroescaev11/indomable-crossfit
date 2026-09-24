@@ -333,7 +333,7 @@ export const ProgressPhotosReelView: React.FC<ProgressPhotosReelViewProps> = ({
           <button
             type="button"
             onClick={() => setIsUploadModalOpen(true)}
-            className="px-5 py-2.5 rounded-xl bg-red-600 hover:bg-red-500 text-white font-black text-xs uppercase tracking-wider transition shadow-lg shadow-red-950/60 cursor-pointer"
+            className="px-5 py-2.5 rounded-xl bg-red-800 hover:bg-red-700 text-white font-black text-xs uppercase tracking-wider transition shadow-md shadow-red-950/60 cursor-pointer border border-red-700/50"
           >
             Subir Primera Foto
           </button>
@@ -769,7 +769,7 @@ export const ProgressPhotosReelView: React.FC<ProgressPhotosReelViewProps> = ({
                 <button
                   type="submit"
                   disabled={isSaving || isCompressing || !uploadImageData}
-                  className="flex-1 py-2.5 rounded-xl bg-red-600 hover:bg-red-500 text-white text-xs font-black uppercase tracking-wider transition shadow-lg shadow-red-950/60 disabled:opacity-50 cursor-pointer"
+                  className="flex-1 py-2.5 rounded-xl bg-red-800 hover:bg-red-700 text-white text-xs font-black uppercase tracking-wider transition shadow-md shadow-red-950/60 disabled:opacity-50 cursor-pointer border border-red-700/50"
                 >
                   {isSaving ? 'Guardando...' : 'Guardar Fotografía'}
                 </button>
@@ -852,7 +852,7 @@ export const ProgressPhotosReelView: React.FC<ProgressPhotosReelViewProps> = ({
               <button
                 type="button"
                 onClick={handleConfirmDelete}
-                className="flex-1 py-2.5 rounded-xl bg-red-600 hover:bg-red-500 text-white text-xs font-bold uppercase tracking-wider transition shadow-lg shadow-red-950/60"
+                className="flex-1 py-2.5 rounded-xl bg-red-800 hover:bg-red-700 text-white text-xs font-bold uppercase tracking-wider transition shadow-md shadow-red-950/60 border border-red-700/50"
               >
                 Eliminar
               </button>

@@ -211,7 +211,7 @@ export const MaintenanceView: React.FC<MaintenanceViewProps> = ({ customMessage 
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full py-2.5 rounded-xl bg-red-600 hover:bg-red-500 text-white text-xs font-bold uppercase tracking-wider transition shadow-lg shadow-red-950/60 disabled:opacity-50"
+                className="w-full py-2.5 rounded-xl bg-red-800 hover:bg-red-700 text-white text-xs font-bold uppercase tracking-wider transition shadow-md shadow-red-950/60 disabled:opacity-50 border border-red-700/50"
               >
                 {isSubmitting ? 'Validando...' : 'Acceder y Administrar'}
               </button>

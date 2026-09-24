@@ -707,7 +707,7 @@ export const AthleteManagementView: React.FC = () => {
               type="button"
               id="btn-add-athlete"
               onClick={handleOpenAddModal}
-              className="flex items-center justify-center gap-2 rounded-xl bg-red-600 hover:bg-red-500 text-white px-4 py-2.5 text-xs font-extrabold shadow-lg shadow-red-950/60 transition active:scale-95 shrink-0 border border-red-500/40"
+              className="flex items-center justify-center gap-2 rounded-xl bg-red-800 hover:bg-red-700 text-white px-4 py-2.5 text-xs font-extrabold shadow-md shadow-red-950/60 transition active:scale-95 shrink-0 border border-red-700/50"
             >
               <UserPlus className="w-4 h-4" />
               <span>Registrar Nuevo Atleta</span>
@@ -1606,7 +1606,7 @@ export const AthleteManagementView: React.FC = () => {
               <div className="flex gap-2 pt-3">
                 <button
                   type="submit"
-                  className="flex-1 rounded-xl bg-red-600 hover:bg-red-500 py-2.5 text-xs font-bold text-white shadow-lg shadow-red-950/60 transition active:scale-95"
+                  className="flex-1 rounded-xl bg-red-800 hover:bg-red-700 py-2.5 text-xs font-bold text-white shadow-md shadow-red-950/60 transition active:scale-95 border border-red-700/50"
                 >
                   Guardar & Dar de Alta
                 </button>
@@ -1829,8 +1829,8 @@ export const AthleteManagementView: React.FC = () => {
                   disabled={isSubmittingRenew}
                   className={`flex-1 flex items-center justify-center gap-2 rounded-xl py-2.5 text-xs font-bold text-white shadow-lg transition active:scale-95 disabled:opacity-60 disabled:pointer-events-none ${
                     selectedAthlete.membership.isPendingApproval
-                      ? 'bg-amber-600 hover:bg-amber-500 shadow-amber-950/60'
-                      : 'bg-red-600 hover:bg-red-500 shadow-red-950/60'
+                      ? 'bg-amber-700 hover:bg-amber-600 shadow-amber-950/60'
+                      : 'bg-red-800 hover:bg-red-700 shadow-red-950/60 border border-red-700/50'
                   }`}
                 >
                   {isSubmittingRenew ? (
@@ -2125,7 +2125,7 @@ export const AthleteManagementView: React.FC = () => {
               <div className="flex gap-2 pt-3">
                 <button
                   type="submit"
-                  className="flex-1 rounded-xl bg-red-600 hover:bg-red-500 py-2.5 text-xs font-bold text-white shadow-lg shadow-red-950/60 transition active:scale-95"
+                  className="flex-1 rounded-xl bg-red-800 hover:bg-red-700 py-2.5 text-xs font-bold text-white shadow-md shadow-red-950/60 transition active:scale-95 border border-red-700/50"
                 >
                   Guardar Cambios
                 </button>
@@ -2241,7 +2241,7 @@ export const AthleteManagementView: React.FC = () => {
                 <button
                   type="submit"
                   disabled={customPinInput.length !== 4}
-                  className="flex-1 rounded-xl bg-red-600 hover:bg-red-500 disabled:opacity-50 disabled:pointer-events-none py-2.5 text-xs font-extrabold uppercase tracking-wider text-white shadow-lg shadow-red-950/60 transition active:scale-95 border border-red-500/40"
+                  className="flex-1 rounded-xl bg-red-800 hover:bg-red-700 disabled:opacity-50 disabled:pointer-events-none py-2.5 text-xs font-extrabold uppercase tracking-wider text-white shadow-md shadow-red-950/60 transition active:scale-95 border border-red-700/50"
                 >
                   Guardar y Asignar PIN
                 </button>
@@ -2284,7 +2284,7 @@ export const AthleteManagementView: React.FC = () => {
                 type="button"
                 onClick={confirmDeleteAthlete}
                 disabled={isDeletingAthlete}
-                className="flex-1 rounded-xl bg-red-600 hover:bg-red-500 py-2.5 text-xs font-bold text-white shadow-md shadow-red-950/60 transition active:scale-95 border border-red-500/40 flex items-center justify-center gap-2 disabled:opacity-50"
+                className="flex-1 rounded-xl bg-red-800 hover:bg-red-700 py-2.5 text-xs font-bold text-white shadow-md shadow-red-950/60 transition active:scale-95 border border-red-700/50 flex items-center justify-center gap-2 disabled:opacity-50"
               >
                 {isDeletingAthlete ? (
                   <>

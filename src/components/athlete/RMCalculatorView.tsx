@@ -947,7 +947,7 @@ export const RMCalculatorView: React.FC<{ initialExercise?: string }> = ({
               <div className="flex gap-2 pt-2">
                 <button
                   type="submit"
-                  className="flex-1 rounded-xl bg-red-600 hover:bg-red-500 py-2.5 text-xs font-bold text-white shadow-md shadow-red-950/60 transition active:scale-95 border border-red-500/40"
+                  className="flex-1 rounded-xl bg-red-800 hover:bg-red-700 py-2.5 text-xs font-bold text-white shadow-md shadow-red-950/60 transition active:scale-95 border border-red-700/50"
                 >
                   Guardar RM
                 </button>
@@ -1017,7 +1017,7 @@ export const RMCalculatorView: React.FC<{ initialExercise?: string }> = ({
                 <button
                   type="submit"
                   disabled={isSavingEx}
-                  className="flex-1 rounded-xl bg-red-600 hover:bg-red-500 py-2.5 text-xs font-bold text-white shadow-md shadow-red-950/60 transition active:scale-95 border border-red-500/40 disabled:opacity-50"
+                  className="flex-1 rounded-xl bg-red-800 hover:bg-red-700 py-2.5 text-xs font-bold text-white shadow-md shadow-red-950/60 transition active:scale-95 border border-red-700/50 disabled:opacity-50"
                 >
                   {isSavingEx ? 'Guardando...' : 'Crear Ejercicio'}
                 </button>

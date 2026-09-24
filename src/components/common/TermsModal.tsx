@@ -108,7 +108,7 @@ export const TermsModal: React.FC<TermsModalProps> = ({ isOpen, onClose, onAccep
                   onAccept();
                   onClose();
                 }}
-                className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-red-600 hover:bg-red-500 text-white text-xs font-bold transition shadow-lg shadow-red-950/50"
+                className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-red-800 hover:bg-red-700 text-white text-xs font-bold transition shadow-md shadow-red-950/50 border border-red-700/50"
               >
                 <CheckCircle2 className="w-4 h-4" />
                 <span>Aceptar Términos</span>

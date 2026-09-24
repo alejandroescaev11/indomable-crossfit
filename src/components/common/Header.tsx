@@ -356,7 +356,7 @@ export const Header: React.FC = () => {
 
                           <label
                             htmlFor="header-athlete-avatar-upload"
-                            className="absolute -bottom-1 -right-1 p-1 rounded-lg bg-red-600 hover:bg-red-500 text-white cursor-pointer shadow-md transition active:scale-95"
+                            className="absolute -bottom-1 -right-1 p-1 rounded-lg bg-red-800 hover:bg-red-700 text-white cursor-pointer shadow-md transition active:scale-95 border border-red-700/50"
                             title="Cambiar foto de perfil desde tu dispositivo"
                           >
                             {isUploadingAvatar ? (
@@ -618,7 +618,7 @@ export const Header: React.FC = () => {
                   <button
                     type="submit"
                     disabled={isEnrollingBiometrics}
-                    className="flex-1 flex items-center justify-center gap-2 rounded-xl bg-red-600 hover:bg-red-500 py-2.5 text-xs font-bold text-white shadow-lg shadow-red-950/60 transition active:scale-95 disabled:opacity-50"
+                    className="flex-1 flex items-center justify-center gap-2 rounded-xl bg-red-800 hover:bg-red-700 py-2.5 text-xs font-bold text-white shadow-md shadow-red-950/60 transition active:scale-95 border border-red-700/50 disabled:opacity-50"
                   >
                     <Fingerprint className="w-4 h-4" />
                     <span>{isEnrollingBiometrics ? 'Verificando sensor...' : 'Activar Biometría'}</span>

@@ -955,7 +955,7 @@ export const AnthropometryView: React.FC<AnthropometryViewProps> = ({ athleteIdO
               <button
                 type="button"
                 onClick={handleConfirmDelete}
-                className="px-5 py-2 rounded-xl bg-red-600 hover:bg-red-500 text-white text-xs font-bold transition-colors shadow-lg shadow-red-950/50"
+                className="px-5 py-2 rounded-xl bg-red-800 hover:bg-red-700 text-white text-xs font-bold transition-colors shadow-md shadow-red-950/50 border border-red-700/50"
               >
                 Sí, Eliminar
               </button>

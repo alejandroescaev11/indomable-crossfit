@@ -68,6 +68,31 @@ El sistema maneja 4 tipos de sesión, todos gestionados por `GymContext`:
 
 ## 📅 HISTORIAL DE CAMBIOS
 
+### v0.14.0 — 2026-09-23
+**Rama/Commit:** `feat/exhaustive-color-palette-sweep-across-all-modules`
+
+#### ✨ Cambios
+- **[Header.tsx]**:
+  - Actualizado el botón de cambio de foto de perfil (cámara) y el botón de vinculación biométrica al tono carmesí suave (`bg-red-800 hover:bg-red-700`).
+- **[LoginView.tsx]**:
+  - Homogeneizados los botones de envío principal e inicio de sesión de Staff/Coach/Admin al nuevo carmesí sobrio.
+- **[AthleteManagementView.tsx, AnthropometryView.tsx, ProgressPhotosReelView.tsx]**:
+  - Barrido exhaustivo y unificación de botones de registro de atletas, renovaciones, borrado de fotos y altas al tono carmesí suave.
+- **[MaintenanceView.tsx & TermsModal.tsx]**:
+  - Actualizados los botones de acceso en mantenimiento y aceptación de términos al tono unificado.
+
+#### 🗂️ Archivos Modificados
+- `src/components/common/Header.tsx`
+- `src/components/auth/LoginView.tsx`
+- `src/components/athlete/RMCalculatorView.tsx`
+- `src/components/athlete/AnthropometryView.tsx`
+- `src/components/athlete/ProgressPhotosReelView.tsx`
+- `src/components/coach/AthleteManagementView.tsx`
+- `src/components/common/MaintenanceView.tsx`
+- `src/components/common/TermsModal.tsx`
+
+---
+
 ### v0.13.0 — 2026-09-23
 **Rama/Commit:** `feat/systemwide-color-softening-and-exclusive-floating-rm-units`
 
