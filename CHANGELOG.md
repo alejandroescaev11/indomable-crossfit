@@ -68,6 +68,22 @@ El sistema maneja 4 tipos de sesión, todos gestionados por `GymContext`:
 
 ## 📅 HISTORIAL DE CAMBIOS
 
+### v0.12.0 — 2026-09-23
+**Rama/Commit:** `feat/softened-red-theme-and-clean-rm-units`
+
+#### ✨ Cambios
+- **[RMCalculatorView.tsx]**:
+  - **Eliminación del Switch Superior de Unidades**: Se removió el selector de unidades (`KG / LBS`) redundante de la parte superior del módulo de RMs. El control de unidades reside de manera exclusiva e interactiva en la barra flotante inferior.
+  - **Suavizado Adicional de Rojos**: Se atenuó la paleta de colores rojos a un tono carmesí oscuro aterciopelado (`bg-red-800/90` con bordes sutiles `border-red-700/60`) en botones, controles flotantes y filtros para garantizar una experiencia visual cero fatigante.
+- **[App.tsx]**:
+  - **Botón RESERVAS Reajustado**: Ajustado el gradiente del botón destacado a un tono carmesí profundo `from-red-900 to-red-700` con resplandor atenuado.
+
+#### 🗂️ Archivos Modificados
+- `src/App.tsx`
+- `src/components/athlete/RMCalculatorView.tsx`
+
+---
+
 ### v0.11.0 — 2026-09-23
 **Rama/Commit:** `feat/softer-red-theme-floating-barbell-controls`
 

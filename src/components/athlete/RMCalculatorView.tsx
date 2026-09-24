@@ -320,32 +320,6 @@ export const RMCalculatorView: React.FC<{ initialExercise?: string }> = ({
           </div>
 
           <div className="flex flex-wrap items-center gap-2">
-            {/* Toggle de Unidad KG / LBS con efecto de conversión */}
-            <div className="flex items-center bg-black p-1 rounded-xl border border-zinc-800 text-xs font-bold shadow-inner">
-              <button
-                type="button"
-                onClick={() => setActiveUnit('kg')}
-                className={`px-3 py-1.5 rounded-lg transition-all font-black text-xs flex items-center gap-1 ${
-                  activeUnit === 'kg'
-                    ? 'bg-red-600 text-white shadow-md shadow-red-950/60'
-                    : 'text-zinc-400 hover:text-white'
-                }`}
-              >
-                <span>KG</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => setActiveUnit('lbs')}
-                className={`px-3 py-1.5 rounded-lg transition-all font-black text-xs flex items-center gap-1 ${
-                  activeUnit === 'lbs'
-                    ? 'bg-red-600 text-white shadow-md shadow-red-950/60'
-                    : 'text-zinc-400 hover:text-white'
-                }`}
-              >
-                <span>LBS</span>
-              </button>
-            </div>
-
             {/* Botón Nuevo Ejercicio */}
             <button
               type="button"
@@ -361,7 +335,7 @@ export const RMCalculatorView: React.FC<{ initialExercise?: string }> = ({
             <button
               type="button"
               onClick={() => handleOpenAddModal()}
-              className="flex items-center gap-1.5 rounded-xl bg-red-600 hover:bg-red-500 text-white px-3.5 py-2 text-xs font-bold shadow-md shadow-red-950/60 transition active:scale-95 border border-red-500/40"
+              className="flex items-center gap-1.5 rounded-xl bg-red-800 hover:bg-red-700 text-white px-3.5 py-2 text-xs font-bold shadow-md shadow-red-950/60 transition active:scale-95 border border-red-700/50"
             >
               <Plus className="w-4 h-4" />
               <span>Nuevo RM</span>
@@ -406,7 +380,7 @@ export const RMCalculatorView: React.FC<{ initialExercise?: string }> = ({
                 onClick={() => setCategoryFilter(cat.id as any)}
                 className={`px-3 py-1.5 rounded-xl transition ${
                   categoryFilter === cat.id
-                    ? 'bg-red-600 text-white shadow-sm'
+                    ? 'bg-red-800/90 text-white border border-red-700/60 shadow-sm'
                     : 'bg-zinc-900 text-zinc-400 hover:text-zinc-200 border border-zinc-800'
                 }`}
               >
@@ -1070,7 +1044,7 @@ export const RMCalculatorView: React.FC<{ initialExercise?: string }> = ({
               type="button"
               onClick={() => setActiveUnit('kg')}
               className={`px-3 py-1 rounded-lg text-xs font-black transition ${
-                activeUnit === 'kg' ? 'bg-red-700 text-white shadow-md' : 'text-zinc-400 hover:text-white'
+                activeUnit === 'kg' ? 'bg-red-800/90 text-white border border-red-700/60 shadow-md' : 'text-zinc-400 hover:text-white'
               }`}
             >
               KG
@@ -1079,7 +1053,7 @@ export const RMCalculatorView: React.FC<{ initialExercise?: string }> = ({
               type="button"
               onClick={() => setActiveUnit('lbs')}
               className={`px-3 py-1 rounded-lg text-xs font-black transition ${
-                activeUnit === 'lbs' ? 'bg-red-700 text-white shadow-md' : 'text-zinc-400 hover:text-white'
+                activeUnit === 'lbs' ? 'bg-red-800/90 text-white border border-red-700/60 shadow-md' : 'text-zinc-400 hover:text-white'
               }`}
             >
               LBS
@@ -1097,7 +1071,7 @@ export const RMCalculatorView: React.FC<{ initialExercise?: string }> = ({
               type="button"
               onClick={() => setBarbellWeight(20)}
               className={`px-2.5 py-1 rounded-lg text-[11px] transition ${
-                barbellWeight === 20 ? 'bg-red-700 text-white shadow-md' : 'text-zinc-400 hover:text-white'
+                barbellWeight === 20 ? 'bg-red-800/90 text-white border border-red-700/60 shadow-md' : 'text-zinc-400 hover:text-white'
               }`}
             >
               {activeUnit === 'kg' ? '20kg (Hombre)' : '45lb (Hombre)'}
@@ -1106,7 +1080,7 @@ export const RMCalculatorView: React.FC<{ initialExercise?: string }> = ({
               type="button"
               onClick={() => setBarbellWeight(15)}
               className={`px-2.5 py-1 rounded-lg text-[11px] transition ${
-                barbellWeight === 15 ? 'bg-red-700 text-white shadow-md' : 'text-zinc-400 hover:text-white'
+                barbellWeight === 15 ? 'bg-red-800/90 text-white border border-red-700/60 shadow-md' : 'text-zinc-400 hover:text-white'
               }`}
             >
               {activeUnit === 'kg' ? '15kg (Mujer)' : '35lb (Mujer)'}
