@@ -214,11 +214,11 @@ export const purgeSentEmailsHistory = (
 // ==========================================
 
 export const generateWelcomeEmailContent = (data: WelcomeEmailData) => {
-  const subject = `🔥 ¡Bienvenido a INDOMABLE CrossFit! Tu cuenta ha sido creada`;
+  const subject = `🔥 ¡Bienvenido a INDOMABLE! Tu cuenta ha sido creada`;
   const textBody = `
 ¡HOLA, ${data.name.toUpperCase()}!
 
-Te damos la bienvenida a la comunidad de INDOMABLE CROSSFIT.
+Te damos la bienvenida a la comunidad de INDOMABLE.
 Tu cuenta ha sido creada exitosamente con los siguientes datos de acceso:
 
 • Documento de Identificación: ${data.documentId}
@@ -226,7 +226,7 @@ Tu cuenta ha sido creada exitosamente con los siguientes datos de acceso:
 • Estado Inicial: PENDIENTE DE ACTIVACIÓN
 
 PASOS SIGUIENTES PARA ACTIVAR TU PLAN:
-Para comenzar a agendar tus franjas horarias y registrar tus marcas (RMs), acércate a la recepción del Box o realiza el pago de tu mensualidad/tiquetera. El Coach o Staff activará tu membresía inmediatamente tras confirmar el pago.
+Para comenzar a agendar tus franjas horarias y registrar tus marcas (RMs), acércate a la recepción del Box o realiza el pago de tu mensualidad. El Coach o Staff activará tu membresía inmediatamente tras confirmar el pago.
 
 ¡Prepárate para superar tus límites!
 INDOMABLE CROSSFIT - Potencia, Disciplina y Comunidad.
@@ -242,7 +242,7 @@ INDOMABLE CROSSFIT - Potencia, Disciplina y Comunidad.
   <div style="padding: 32px 24px;">
     <h2 style="color: #ffffff; font-size: 20px; font-weight: 800; margin-top: 0;">¡Bienvenido a la manada, ${data.name}! 🔥</h2>
     <p style="color: #a1a1aa; font-size: 14px; line-height: 1.6;">
-      Tu cuenta de atleta ha sido creada en la plataforma de <strong>INDOMABLE CrossFit</strong>. A continuación tienes tus credenciales para ingresar:
+      Tu cuenta de atleta ha sido creada en la plataforma de <strong>INDOMABLE</strong>. A continuación tienes tus credenciales para ingresar:
     </p>
 
     <div style="background-color: #18181b; border: 1px solid #27272a; border-radius: 12px; padding: 20px; margin: 24px 0;">
@@ -271,12 +271,12 @@ INDOMABLE CROSSFIT - Potencia, Disciplina y Comunidad.
 
     <div style="text-align: center; margin: 24px 0;">
       <a href="${typeof window !== 'undefined' && window.location.origin ? window.location.origin : 'https://app-crossfit-c66a5.web.app'}" style="background-color: #dc2626; color: #ffffff; padding: 12px 28px; text-decoration: none; font-weight: 800; font-size: 13px; text-transform: uppercase; letter-spacing: 1px; border-radius: 10px; display: inline-block; box-shadow: 0 4px 14px rgba(220, 38, 38, 0.4);">
-        Ingresar a INDOMABLE CrossFit →
+        Ingresar a INDOMABLE→
       </a>
     </div>
 
     <p style="color: #71717a; font-size: 12px; text-align: center; margin-top: 32px; border-top: 1px solid #27272a; padding-top: 20px;">
-      INDOMABLE CrossFit • Aplicativo Web Progresivo (PWA)<br/>
+      INDOMABLE • Aplicativo Web Progresivo (PWA)<br/>
       Entrenamiento de Alta Intensidad, Fuerza & Comunidad.
     </p>
   </div>
@@ -287,11 +287,11 @@ INDOMABLE CROSSFIT - Potencia, Disciplina y Comunidad.
 };
 
 export const generateActivationEmailContent = (data: ActivationEmailData) => {
-  const subject = `⚡ ¡Tu membresía en INDOMABLE CrossFit ha sido ACTIVADA!`;
+  const subject = `⚡ ¡Tu membresía en INDOMABLE ha sido ACTIVADA!`;
   const textBody = `
 ¡EXCELENTE NOTICIA, ${data.name.toUpperCase()}!
 
-Tu membresía en INDOMABLE CROSSFIT ha sido activada y verificada por el Coach.
+Tu membresía en INDOMABLE ha sido activada y verificada por el Coach.
 
 DETALLES DE TU PLAN ACTIVADO:
 • Plan: ${data.planName}
@@ -300,10 +300,8 @@ DETALLES DE TU PLAN ACTIVADO:
 ${data.classesCount ? `• Clases Disponibles: ${data.classesCount}` : '• Clases: Ilimitadas durante la vigencia'}
 
 ¡TU CUPO YA ESTÁ HABILITADO!
-Abre la aplicación ahora mismo para consultar el WOD del día y agendar tu primera clase.
+Abre la aplicación ahora mismo para vivir la experiencia INDOMABLE de la mejor manera.
 
-¡Nos vemos en el box a darlo todo!
-INDOMABLE CROSSFIT
 `;
 
   const htmlBody = `
@@ -316,7 +314,7 @@ INDOMABLE CROSSFIT
   <div style="padding: 32px 24px;">
     <h2 style="color: #ffffff; font-size: 20px; font-weight: 800; margin-top: 0;">¡Todo listo para entrenar, ${data.name}! ⚡</h2>
     <p style="color: #a1a1aa; font-size: 14px; line-height: 1.6;">
-      El Coach ha confirmado tu suscripción. Tu membresía se encuentra <strong>100% ACTIVA</strong> y habilitada para reservar franjas de clase en la plataforma.
+      El Coach ha confirmado tu suscripción. Tu membresía se encuentra <strong>100% ACTIVA</strong> y habilitada.
     </p>
 
     <div style="background-color: #18181b; border: 1px solid #14532d; border-radius: 12px; padding: 20px; margin: 24px 0;">
@@ -336,12 +334,12 @@ INDOMABLE CROSSFIT
 
     <div style="text-align: center; margin: 28px 0;">
       <a href="${typeof window !== 'undefined' && window.location.origin ? window.location.origin : 'https://app-crossfit-c66a5.web.app'}" style="background-color: #dc2626; color: #ffffff; padding: 12px 28px; text-decoration: none; font-weight: 800; font-size: 13px; text-transform: uppercase; letter-spacing: 1px; border-radius: 10px; display: inline-block; box-shadow: 0 4px 14px rgba(220, 38, 38, 0.4);">
-        Ir a Reservar Clase →
+        Ir a disfrutar de nuestra APP →
       </a>
     </div>
 
     <p style="color: #71717a; font-size: 12px; text-align: center; margin-top: 32px; border-top: 1px solid #27272a; padding-top: 20px;">
-      INDOMABLE CrossFit • Box Oficial<br/>
+      INDOMABLE • Box Oficial<br/>
       Recuerda llegar 10 minutos antes de tu clase para el calentamiento general.
     </p>
   </div>

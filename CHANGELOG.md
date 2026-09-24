@@ -68,6 +68,13 @@ El sistema maneja 4 tipos de sesión, todos gestionados por `GymContext`:
 
 ## 📅 HISTORIAL DE CAMBIOS
 
+### v0.15.1 — 2026-09-24
+**Rama/Commit:** `fix/email-templates-copywriting-update`
+
+#### ✨ Cambios
+- **[emailService.ts]**:
+  - Actualizados los textos de las plantillas HTML y texto plano para correos de bienvenida y activación de membresía (unificación del nombre de marca a "INDOMABLE" y llamadas a la acción directas a la aplicación).
+
 ### v0.15.0 — 2026-09-24
 **Rama/Commit:** `feat/accounting-dual-sheet-google-sync-and-user-control`
 
