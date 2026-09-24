@@ -1917,6 +1917,13 @@ export const GymProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       };
     }
 
+    if (found.role === 'admin') {
+      return {
+        success: false,
+        message: 'Esta cuenta tiene asignado el rol de Administrador. Por favor ingresa desde la opción de Administrador.',
+      };
+    }
+
     setCurrentCoachId(found.id);
     setRole('coach');
     setIsAuthenticated(true);
@@ -1952,18 +1959,25 @@ export const GymProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
     const isMaster = (cleanUser === masterUser || cleanUser === masterEmail) && cleanPass === masterPass;
 
-    if (!isMaster) {
-      // Los miembros de staff con rol 'admin' ya no tienen acceso al panel de Administrador.
-      // Deben ingresar como Coach desde la sección de Entrenadores.
+    // Permitir ingreso como admin a miembros de staff con rol 'admin'
+    const staffAdmin = coaches.find(
+      (c) =>
+        c.role === 'admin' &&
+        c.isActive &&
+        (c.username.toLowerCase() === cleanUser || c.email.toLowerCase() === cleanUser) &&
+        c.password === cleanPass
+    );
+
+    if (!isMaster && !staffAdmin) {
       return {
         success: false,
-        message: 'Credenciales de Administrador incorrectas. Si eres miembro del Staff, ingresa desde la sección de Entrenadores.',
+        message: 'Credenciales de Administrador incorrectas. Verifica tus datos de acceso.',
       };
     }
 
     // Nombre canónico para el bloqueo de concurrencia
-    const canonicalUsername = masterUser;
-    const adminDisplayName = 'Administrador General';
+    const canonicalUsername = isMaster ? masterUser : staffAdmin!.username.toLowerCase();
+    const adminDisplayName = isMaster ? 'Administrador General' : staffAdmin!.name;
 
     // Generar un identificador de sesión único para este dispositivo
     const newSessionId =
@@ -1985,7 +1999,7 @@ export const GymProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
     setAdminSessionId(newSessionId);
     setAdminActiveUsername(canonicalUsername);
-    setCurrentCoachId(null);
+    setCurrentCoachId(isMaster ? null : staffAdmin!.id);
     setRole('admin');
     setIsAuthenticated(true);
 

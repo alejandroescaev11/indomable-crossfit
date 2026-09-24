@@ -575,55 +575,31 @@ export const WODTimerView: React.FC = () => {
 
   return (
     <div className="space-y-6 max-w-4xl mx-auto animate-in fade-in duration-300">
-      {/* Cabecera del Módulo */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-zinc-950 border border-zinc-850 p-4 sm:p-5 rounded-2xl shadow-xl">
-        <div className="flex items-center gap-3">
-          <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-red-600 to-amber-600 p-0.5 shadow-lg shadow-red-950/50 flex items-center justify-center shrink-0">
-            <div className="w-full h-full bg-black/40 rounded-[14px] flex items-center justify-center text-white">
-              <Flame className="w-6 h-6 text-amber-400 animate-pulse" />
-            </div>
-          </div>
-          <div>
-            <div className="flex items-center gap-2">
-              <h1 className="text-lg sm:text-xl font-black text-white tracking-wide uppercase">
-                Reloj & Cronómetro WOD
-              </h1>
-              <span className="px-2 py-0.5 rounded-md text-[10px] font-black uppercase tracking-wider bg-red-950/80 text-red-400 border border-red-800/60">
-                Atletas Indomable
-              </span>
-            </div>
-            <p className="text-xs text-zinc-400">
-              Temporizador profesional para Tabata, EMOM, AMRAP y For Time con señales sonoras
-            </p>
-          </div>
-        </div>
-
-        {/* Controles de Sonido y Pantalla Activa */}
-        <div className="flex items-center gap-2 self-end sm:self-auto">
-          {wakeLockActive && (
-            <span
-              className="flex items-center gap-1 px-2.5 py-1 rounded-xl bg-emerald-950/70 border border-emerald-800/70 text-emerald-400 text-[11px] font-bold"
-              title="Tu pantalla permanecerá encendida durante el entrenamiento"
-            >
-              <Smartphone className="w-3.5 h-3.5 animate-pulse" />
-              <span>Pantalla Activa</span>
-            </span>
-          )}
-
-          <button
-            type="button"
-            onClick={toggleMute}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-xs font-bold transition ${
-              isMuted
-                ? 'bg-zinc-900 border-zinc-800 text-zinc-500 hover:text-zinc-300'
-                : 'bg-red-950/60 border-red-800/80 text-red-400 hover:bg-red-900/60'
-            }`}
-            title={isMuted ? 'Activar sonido de cronómetro' : 'Silenciar sonido'}
+      {/* Controles de Sonido y Pantalla Activa */}
+      <div className="flex items-center justify-end gap-2 pt-1">
+        {wakeLockActive && (
+          <span
+            className="flex items-center gap-1 px-2.5 py-1 rounded-xl bg-emerald-950/70 border border-emerald-800/70 text-emerald-400 text-[11px] font-bold"
+            title="Tu pantalla permanecerá encendida durante el entrenamiento"
           >
-            {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
-            <span>{isMuted ? 'Mudo' : 'Sonido ON'}</span>
-          </button>
-        </div>
+            <Smartphone className="w-3.5 h-3.5 animate-pulse" />
+            <span>Pantalla Activa</span>
+          </span>
+        )}
+
+        <button
+          type="button"
+          onClick={toggleMute}
+          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-xs font-bold transition shadow-md ${
+            isMuted
+              ? 'bg-zinc-900 border-zinc-800 text-zinc-500 hover:text-zinc-300'
+              : 'bg-red-950/80 border-red-800 text-red-400 hover:bg-red-900/80'
+          }`}
+          title={isMuted ? 'Activar sonido de cronómetro' : 'Silenciar sonido'}
+        >
+          {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
+          <span>{isMuted ? 'Mudo' : 'Sonido ON'}</span>
+        </button>
       </div>
 
       {/* Selector de Modo */}

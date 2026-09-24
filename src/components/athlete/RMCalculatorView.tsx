@@ -63,6 +63,22 @@ export const getExerciseGroup = (
   return 'fuerza';
 };
 
+// Repeticiones teóricas estimadas por porcentaje de 1RM (Tabla Estándar NSCA)
+export const getTheoreticalReps = (percentage: number): number => {
+  if (percentage >= 100) return 1;
+  if (percentage >= 95) return 2;
+  if (percentage >= 92) return 3;
+  if (percentage >= 89) return 4;
+  if (percentage >= 86) return 5;
+  if (percentage >= 84) return 6;
+  if (percentage >= 81) return 7;
+  if (percentage >= 78) return 8;
+  if (percentage >= 75) return 10;
+  if (percentage >= 70) return 12;
+  if (percentage >= 65) return 15;
+  return 20;
+};
+
 export const RMCalculatorView: React.FC<{ initialExercise?: string }> = ({
   initialExercise,
 }) => {
@@ -382,7 +398,7 @@ export const RMCalculatorView: React.FC<{ initialExercise?: string }> = ({
             {[
               { id: 'all', label: 'Todos' },
               { id: 'levantamiento', label: '🏋️ Levantamiento' },
-              { id: 'fuerza', label: '💪 Fuerza' },
+              { id: 'fuerza', label: '🏋️ Musculación' },
             ].map((cat) => (
               <button
                 key={cat.id}
@@ -699,7 +715,7 @@ export const RMCalculatorView: React.FC<{ initialExercise?: string }> = ({
               </div>
             </div>
 
-            {/* Carga Calculada Total */}
+            {/* Carga Calculada Total con Repeticiones Teóricas */}
             <div className="rounded-xl bg-gradient-to-r from-red-950/70 to-black p-4 border border-red-700/50 text-center">
               <span className="text-xs font-bold uppercase tracking-wider text-zinc-300">
                 Carga Total Sugerida en Barra
@@ -713,6 +729,14 @@ export const RMCalculatorView: React.FC<{ initialExercise?: string }> = ({
               <p className="text-[11px] text-zinc-400 mt-1">
                 Equivale al {targetPercent}% de tu 1RM ({effective1RM} {activeUnit})
               </p>
+              
+              {/* Insignia de Repeticiones Teóricas */}
+              <div className="mt-3 pt-2.5 border-t border-zinc-800/80 flex items-center justify-center gap-2">
+                <span className="text-xs text-zinc-400 font-semibold">Repeticiones Teóricas:</span>
+                <span className="px-2.5 py-0.5 rounded-lg bg-red-600 text-white font-black text-xs shadow">
+                  ~{getTheoreticalReps(targetPercent)} rep{getTheoreticalReps(targetPercent) > 1 ? 's' : ''}
+                </span>
+              </div>
             </div>
           </div>
 
@@ -767,6 +791,43 @@ export const RMCalculatorView: React.FC<{ initialExercise?: string }> = ({
                 </div>
               )}
             </div>
+          </div>
+        </div>
+
+        {/* Tabla Referencial de Porcentajes y Repeticiones Teóricas */}
+        <div className="pt-3 border-t border-zinc-850 space-y-3">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold uppercase tracking-wider text-zinc-300 flex items-center gap-1.5">
+              <Activity className="w-4 h-4 text-amber-500" />
+              Tabla Referencial de Porcentajes & Repeticiones Teóricas
+            </span>
+            <span className="text-[10px] text-zinc-400 font-medium">
+              Base: <strong className="text-white">{effective1RM} {activeUnit}</strong> ({selectedExerciseName})
+            </span>
+          </div>
+
+          <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-8 gap-2">
+            {[100, 95, 90, 85, 80, 75, 70, 65].map((pct) => {
+              const calculatedPctWeight = Math.round(((effective1RM * pct) / 100) * 10) / 10;
+              const reps = getTheoreticalReps(pct);
+              const isSelected = targetPercent === pct;
+              return (
+                <button
+                  key={pct}
+                  type="button"
+                  onClick={() => setTargetPercent(pct)}
+                  className={`p-2 rounded-xl border text-center transition ${
+                    isSelected
+                      ? 'bg-red-600 border-red-500 text-white shadow-lg shadow-red-950/60 scale-105'
+                      : 'bg-zinc-900/90 border-zinc-800 text-zinc-300 hover:border-zinc-700 hover:text-white'
+                  }`}
+                >
+                  <div className="text-[10px] font-bold text-zinc-400 uppercase">{pct}%</div>
+                  <div className="text-base font-black font-teko leading-tight">{calculatedPctWeight} <span className="text-[10px] font-normal">{activeUnit}</span></div>
+                  <div className="text-[10px] font-bold text-amber-400">~{reps} rep{reps > 1 ? 's' : ''}</div>
+                </button>
+              );
+            })}
           </div>
         </div>
       </div>
@@ -1023,6 +1084,62 @@ export const RMCalculatorView: React.FC<{ initialExercise?: string }> = ({
           </div>
         </div>
       )}
+
+      {/* BOTÓN FLOTANTE: Ajustes Rápidos de Unidad (KG/LBS) y Categoría sin desplazarse */}
+      <div className="fixed bottom-20 right-3 sm:right-6 z-40 flex items-center gap-2 bg-zinc-950/95 border border-red-900/60 p-2 rounded-2xl shadow-2xl backdrop-blur-md animate-in fade-in">
+        {/* Selector de Unidad */}
+        <div className="flex items-center rounded-xl bg-zinc-900 border border-zinc-800 p-0.5">
+          <button
+            type="button"
+            onClick={() => setActiveUnit('kg')}
+            className={`px-2.5 py-1 rounded-lg text-xs font-black transition ${
+              activeUnit === 'kg' ? 'bg-red-600 text-white shadow' : 'text-zinc-400 hover:text-white'
+            }`}
+          >
+            KG
+          </button>
+          <button
+            type="button"
+            onClick={() => setActiveUnit('lbs')}
+            className={`px-2.5 py-1 rounded-lg text-xs font-black transition ${
+              activeUnit === 'lbs' ? 'bg-red-600 text-white shadow' : 'text-zinc-400 hover:text-white'
+            }`}
+          >
+            LBS
+          </button>
+        </div>
+
+        {/* Selector de Categoría */}
+        <div className="flex items-center rounded-xl bg-zinc-900 border border-zinc-800 p-0.5 text-xs font-bold">
+          <button
+            type="button"
+            onClick={() => setCategoryFilter('all')}
+            className={`px-2 py-1 rounded-lg text-[11px] transition ${
+              categoryFilter === 'all' ? 'bg-zinc-800 text-white' : 'text-zinc-400'
+            }`}
+          >
+            Todos
+          </button>
+          <button
+            type="button"
+            onClick={() => setCategoryFilter('levantamiento')}
+            className={`px-2 py-1 rounded-lg text-[11px] transition ${
+              categoryFilter === 'levantamiento' ? 'bg-red-600 text-white' : 'text-zinc-400'
+            }`}
+          >
+            Levantamiento
+          </button>
+          <button
+            type="button"
+            onClick={() => setCategoryFilter('fuerza')}
+            className={`px-2 py-1 rounded-lg text-[11px] transition ${
+              categoryFilter === 'fuerza' ? 'bg-purple-600 text-white' : 'text-zinc-400'
+            }`}
+          >
+            Musculación
+          </button>
+        </div>
+      </div>
     </div>
   );
 };

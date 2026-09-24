@@ -68,6 +68,30 @@ El sistema maneja 4 tipos de sesión, todos gestionados por `GymContext`:
 
 ## 📅 HISTORIAL DE CAMBIOS
 
+### v0.10.0 — 2026-09-23
+**Rama/Commit:** `feat/staff-role-segregation-logo-and-rm-enhancements`
+
+#### ✨ Cambios
+- **[GymContext.tsx]**:
+  - **Segregación Estricta de Roles en Staff**: Las cuentas creadas con rol `admin` solo pueden acceder vía inicio de sesión de Administrador (y son rechazadas en login de Coach). Las cuentas creadas con rol `coach` solo ingresan vía login de Coach (y son rechazadas en login de Admin).
+- **[Header.tsx & public/logo-indomable-text.png]**:
+  - Reemplazada la tipografía plana superior por la imagen de marca **INDOMABLE** con estilo grunge/distressed en alta definición en modo oscuro.
+- **[WODTimerView.tsx]**:
+  - Removida la tarjeta gigante superior "Reloj & Cronómetro WOD" dejando únicamente una barra compacta con el botón de control de sonido y la insignia de pantalla activa.
+- **[RMCalculatorView.tsx]**:
+  - **Renombrado de Filtros**: Cambiado el término de filtro "Fuerza" a "Musculación".
+  - **Repeticiones Teóricas Estimadas**: Calculadora de repeticiones teóricas por porcentaje (100% → 1 rep, 95% → 2 reps, 90% → 4 reps, 85% → 6 reps, 80% → 8 reps, 75% → 10 reps, 70% → 12 reps, 65% → 15 reps). Añadida insignia en resultado principal y tabla de referencia interactiva.
+  - **Ajustes Rápidos Flotantes**: Añadida barra flotante (FAB) fija en la esquina inferior derecha para alternar unidades (`KG` / `LBS`) y filtro de categoría (`Todos`, `Levantamiento`, `Musculación`) al instante sin tener que desplazarse por la pantalla.
+
+#### 🗂️ Archivos Modificados / Creados
+- `public/logo-indomable-text.png` [NUEVO]
+- `src/components/common/Header.tsx`
+- `src/components/athlete/WODTimerView.tsx`
+- `src/components/athlete/RMCalculatorView.tsx`
+- `src/context/GymContext.tsx`
+
+---
+
 ### v0.9.0 — 2026-09-23
 **Rama/Commit:** `feat/google-apps-script-email-and-plan-fixes`
 

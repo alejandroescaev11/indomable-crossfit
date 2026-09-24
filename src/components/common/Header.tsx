@@ -141,18 +141,18 @@ export const Header: React.FC = () => {
       <div className="mx-auto max-w-7xl px-3 sm:px-6 py-2 sm:py-2.5">
         <div className="flex items-center justify-between gap-2">
           {/* Brand Logo & Name */}
-          <div className="flex items-center gap-2.5">
+          <div className="flex items-center gap-2 sm:gap-3">
             <div className="relative flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-xl bg-zinc-950 border border-zinc-800 p-0.5 shadow-md shadow-black/80 shrink-0 overflow-hidden">
               <img src="/logo.png" alt="INDOMABLE" className="h-full w-full object-contain" />
             </div>
-            <div>
-              <div className="flex items-center gap-1.5">
-                <span className="text-lg sm:text-2xl font-black tracking-wider text-white font-['Teko'] uppercase leading-none">
-                  INDOMABLE
-                </span>
-              </div>
-              <p className="text-[10px] text-zinc-500 font-medium hidden sm:block leading-none">
-                Comunidad Deportiva
+            <div className="flex flex-col justify-center">
+              <img
+                src="/logo-indomable-text.png"
+                alt="INDOMABLE"
+                className="h-5 sm:h-7 w-auto object-contain filter invert brightness-200"
+              />
+              <p className="text-[9px] sm:text-[10px] text-zinc-400 font-bold uppercase tracking-widest hidden sm:block leading-none mt-0.5">
+                CrossFit & Performance Box
               </p>
             </div>
           </div>
