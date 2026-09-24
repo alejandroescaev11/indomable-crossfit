@@ -174,14 +174,16 @@ interface GymContextType {
     planName: string,
     durationDays: number,
     classesCount?: number,
-    discipline?: AthleteDiscipline
+    discipline?: AthleteDiscipline,
+    customStartDate?: string
   ) => Promise<{ success: boolean; message: string; emailResult?: { success: boolean; message: string } }>;
   approveAthleteMembership: (
     id: string,
     planName: string,
     durationDays: number,
     classesCount?: number,
-    discipline?: AthleteDiscipline
+    discipline?: AthleteDiscipline,
+    customStartDate?: string
   ) => Promise<{ success: boolean; message: string; emailResult?: { success: boolean; message: string } }>;
 
   // Classes & Bookings
@@ -920,12 +922,22 @@ export const GymProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     });
 
     const unsubPlans = subscribeMembershipPlansLive((livePlans) => {
-      if (livePlans && Array.isArray(livePlans) && livePlans.length > 0) {
+      if (livePlans && Array.isArray(livePlans)) {
         setPlans(livePlans);
+        // Marcar que ya existen planes en Firestore (evita re-sembrar defaults)
+        if (livePlans.length > 0) {
+          try { localStorage.setItem(`${STORAGE_KEY}_plans_seeded`, 'true'); } catch {}
+        }
       }
     });
 
-    seedMembershipPlansIfEmpty(DEFAULT_MEMBERSHIP_PLANS).catch(() => {});
+    // Solo sembrar planes por defecto la primera vez que se usa la app
+    const plansSeedFlag = localStorage.getItem(`${STORAGE_KEY}_plans_seeded`);
+    if (!plansSeedFlag) {
+      seedMembershipPlansIfEmpty(DEFAULT_MEMBERSHIP_PLANS).then(() => {
+        try { localStorage.setItem(`${STORAGE_KEY}_plans_seeded`, 'true'); } catch {}
+      }).catch(() => {});
+    }
 
     // Sembrar la base de datos Firestore si está vacía (excluye atletas para evitar resurrecciones)
     seedFirestoreIfEmpty({
@@ -1491,7 +1503,8 @@ export const GymProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     planName: string,
     durationDays: number = 30,
     classesCount?: number,
-    discipline?: AthleteDiscipline
+    discipline?: AthleteDiscipline,
+    customStartDate?: string
   ): Promise<{ success: boolean; message: string; emailResult?: { success: boolean; message: string } }> => {
     if (role !== 'admin') {
       return {
@@ -1501,9 +1514,10 @@ export const GymProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }
 
     const now = new Date();
-    const startDate = now.toISOString().split('T')[0];
-    const end = new Date(now);
-    end.setDate(now.getDate() + (durationDays > 0 ? durationDays : 30));
+    const baseDate = customStartDate ? new Date(customStartDate + 'T00:00:00') : now;
+    const startDate = baseDate.toISOString().split('T')[0];
+    const end = new Date(baseDate);
+    end.setDate(baseDate.getDate() + (durationDays > 0 ? durationDays : 30));
     const endDate = end.toISOString().split('T')[0];
 
     const safePlan = (!planName || planName.toLowerCase().includes('pendiente'))
@@ -1573,7 +1587,7 @@ export const GymProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
     // Registrar automáticamente en Contabilidad y Google Sheets
     const matchingPlan = plans.find((p) => p.name.toLowerCase() === safePlan.toLowerCase());
-    const resolvedPrice = matchingPlan?.price || (resolvedDiscipline === 'musculacion' ? 120000 : resolvedDiscipline === 'personalizado' ? 350000 : 160000);
+    const resolvedPrice = (matchingPlan?.price !== undefined && matchingPlan?.price !== null) ? matchingPlan.price : (resolvedDiscipline === 'musculacion' ? 120000 : resolvedDiscipline === 'personalizado' ? 350000 : 160000);
     const renewTx: AccountingTransaction = {
       id: `tx-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
       date: startDate,
@@ -1615,7 +1629,8 @@ export const GymProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     planName: string = 'Mensual Ilimitado Pro',
     durationDays: number = 30,
     classesCount?: number,
-    discipline?: AthleteDiscipline
+    discipline?: AthleteDiscipline,
+    customStartDate?: string
   ): Promise<{ success: boolean; message: string; emailResult?: { success: boolean; message: string } }> => {
     if (role !== 'admin' && role !== 'coach') {
       return {
@@ -1625,9 +1640,10 @@ export const GymProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }
 
     const now = new Date();
-    const startDate = now.toISOString().split('T')[0];
-    const end = new Date(now);
-    end.setDate(now.getDate() + (durationDays > 0 ? durationDays : 30));
+    const baseDate = customStartDate ? new Date(customStartDate + 'T00:00:00') : now;
+    const startDate = baseDate.toISOString().split('T')[0];
+    const end = new Date(baseDate);
+    end.setDate(baseDate.getDate() + (durationDays > 0 ? durationDays : 30));
     const endDate = end.toISOString().split('T')[0];
 
     const safePlan = (!planName || planName.toLowerCase().includes('pendiente'))
@@ -1697,7 +1713,7 @@ export const GymProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
     // Registrar automáticamente en Contabilidad y Google Sheets
     const matchingPlan = plans.find((p) => p.name.toLowerCase() === safePlan.toLowerCase());
-    const resolvedPrice = matchingPlan?.price || (resolvedDiscipline === 'musculacion' ? 120000 : resolvedDiscipline === 'personalizado' ? 350000 : 160000);
+    const resolvedPrice = (matchingPlan?.price !== undefined && matchingPlan?.price !== null) ? matchingPlan.price : (resolvedDiscipline === 'musculacion' ? 120000 : resolvedDiscipline === 'personalizado' ? 350000 : 160000);
     const approveTx: AccountingTransaction = {
       id: `tx-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
       date: startDate,
@@ -1936,25 +1952,18 @@ export const GymProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
     const isMaster = (cleanUser === masterUser || cleanUser === masterEmail) && cleanPass === masterPass;
 
-    // Buscar también en miembros de staff que tengan rol 'admin'
-    const staffAdmin = coaches.find(
-      (c) =>
-        c.role === 'admin' &&
-        c.isActive &&
-        (c.username.toLowerCase() === cleanUser || c.email.toLowerCase() === cleanUser) &&
-        c.password === cleanPass
-    );
-
-    if (!isMaster && !staffAdmin) {
+    if (!isMaster) {
+      // Los miembros de staff con rol 'admin' ya no tienen acceso al panel de Administrador.
+      // Deben ingresar como Coach desde la sección de Entrenadores.
       return {
         success: false,
-        message: 'Credenciales de Administrador incorrectas. Verifica tus datos de acceso.',
+        message: 'Credenciales de Administrador incorrectas. Si eres miembro del Staff, ingresa desde la sección de Entrenadores.',
       };
     }
 
     // Nombre canónico para el bloqueo de concurrencia
-    const canonicalUsername = isMaster ? masterUser : staffAdmin!.username.toLowerCase();
-    const adminDisplayName = isMaster ? 'Administrador General' : staffAdmin!.name;
+    const canonicalUsername = masterUser;
+    const adminDisplayName = 'Administrador General';
 
     // Generar un identificador de sesión único para este dispositivo
     const newSessionId =
@@ -1976,7 +1985,7 @@ export const GymProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
     setAdminSessionId(newSessionId);
     setAdminActiveUsername(canonicalUsername);
-    setCurrentCoachId(isMaster ? null : staffAdmin!.id);
+    setCurrentCoachId(null);
     setRole('admin');
     setIsAuthenticated(true);
 

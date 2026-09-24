@@ -68,6 +68,27 @@ El sistema maneja 4 tipos de sesión, todos gestionados por `GymContext`:
 
 ## 📅 HISTORIAL DE CAMBIOS
 
+### v0.9.0 — 2026-09-23
+**Rama/Commit:** `feat/google-apps-script-email-and-plan-fixes`
+
+#### ✨ Cambios
+- **[emailService.ts]**: Migración total de envío de correos transaccionales a Google Apps Script Webhook (`https://script.google.com/macros/s/AKfycbzsBATTjDU5EMlckuncNPMR-aZ0jsDVgBQ5z3iGJ3Qq6laAQl98q0wXm_stY0mZ_v9m/exec`). Se removió la implementación de EmailJS.
+- **[GymContext.tsx]**:
+  - **Persistencia de Planes**: Corregida la sincronización de planes para evitar la re-siembra accidental de planes por defecto tras eliminaciones o modificaciones de admin (vía flag `_plans_seeded` en localStorage).
+  - **Planes a $0**: Solucionado error en resolución de precios donde `0` se evaluaba como falsy (`matchingPlan.price ?? defaultPrice`). Ahora se registran correctamente renovaciones con monto $0.
+  - **Restricción de Cuentas Admin**: Las cuentas adicionales de Staff creadas en "Gestión de Coaches" con rol `admin` ya no tienen acceso al panel de Administrador General. Únicamente la cuenta Maestra tiene acceso Administrador.
+  - **Fecha Inicial de Renovación**: Añadido soporte para parámetro `customStartDate` en `renewAthleteMembership` y `approveAthleteMembership`.
+- **[App.tsx]**: Renombrada la pestaña **"WOD"** a **"RESERVAS"**, reubicada en el centro de la barra de navegación inferior del atleta con un diseño destacado (gradiente carmesí, elevación e icono `CalendarCheck`).
+- **[AthleteManagementView.tsx]**: Añadido campo editable de **Fecha de Inicio** en el modal de renovación/aprobación de membresías con cálculo automático de la fecha de vencimiento final.
+- **[ProgressPhotosReelView.tsx]**: Confirmación de borrado de fotografías de progreso de atletas de plan personalizado habilitada.
+
+#### 🗂️ Archivos Modificados
+- `src/services/emailService.ts`
+- `src/context/GymContext.tsx`
+- `src/App.tsx`
+- `src/components/coach/AthleteManagementView.tsx`
+- `src/components/athlete/ProgressPhotosReelView.tsx`
+
 ---
 
 ### v0.8.0 — 2026-09-21

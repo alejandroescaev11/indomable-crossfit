@@ -17,6 +17,7 @@ import { PaymentModal } from './components/athlete/PaymentModal';
 import { initOneSignal, identifyUserInOneSignal, logoutOneSignal } from './services/oneSignalService';
 import {
   Calendar,
+  CalendarCheck,
   Flame,
   Percent,
   Timer,
@@ -239,26 +240,9 @@ const MainContent: React.FC = () => {
                 <span className="text-[10px] font-bold uppercase tracking-wider">Inicio</span>
               </button>
 
-              {/* Atletas CrossFit: WOD & Reservas, RMs, Reloj y Pizarra */}
+              {/* Atletas CrossFit: Inicio, RMs, RESERVAS (centro), Reloj, Pizarra */}
               {isCrossFitAthlete && (
                 <>
-                  <button
-                    type="button"
-                    id="tab-nav-wod-booking"
-                    onClick={() => {
-                      setAthleteTab('wod-booking');
-                      window.scrollTo({ top: 0, behavior: 'smooth' });
-                    }}
-                    className={`flex flex-col items-center py-1 px-2 rounded-xl transition-all ${
-                      athleteTab === 'wod-booking'
-                        ? 'text-red-400 font-black scale-105'
-                        : 'text-zinc-400 hover:text-zinc-200'
-                    }`}
-                  >
-                    <Flame className={`w-5 h-5 mb-0.5 ${athleteTab === 'wod-booking' ? 'stroke-[2.5]' : ''}`} />
-                    <span className="text-[10px] font-bold uppercase tracking-wider">WOD</span>
-                  </button>
-
                   <button
                     type="button"
                     id="tab-nav-rms"
@@ -274,6 +258,24 @@ const MainContent: React.FC = () => {
                   >
                     <Percent className={`w-5 h-5 mb-0.5 ${athleteTab === 'rms' ? 'stroke-[2.5]' : ''}`} />
                     <span className="text-[10px] font-bold uppercase tracking-wider">RMs</span>
+                  </button>
+
+                  {/* RESERVAS — Botón central destacado */}
+                  <button
+                    type="button"
+                    id="tab-nav-wod-booking"
+                    onClick={() => {
+                      setAthleteTab('wod-booking');
+                      window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }}
+                    className={`relative flex flex-col items-center py-1.5 px-4 rounded-2xl transition-all ${
+                      athleteTab === 'wod-booking'
+                        ? 'text-white font-black scale-110 bg-gradient-to-t from-red-700 to-red-500 shadow-lg shadow-red-600/50 -translate-y-1'
+                        : 'text-red-300 hover:text-white bg-red-950/60 hover:bg-red-900/60 border border-red-800/40'
+                    }`}
+                  >
+                    <CalendarCheck className={`w-5 h-5 mb-0.5 ${athleteTab === 'wod-booking' ? 'stroke-[2.5]' : ''}`} />
+                    <span className="text-[10px] font-extrabold uppercase tracking-wider">Reservas</span>
                   </button>
 
                   <button
@@ -346,7 +348,7 @@ const MainContent: React.FC = () => {
                     }`}
                   >
                     <Timer className={`w-5 h-5 mb-0.5 ${athleteTab === 'timer' ? 'stroke-[2.5]' : ''}`} />
-                    <span className="text-[10px] font-bold uppercase tracking-wider">Reloj WOD</span>
+                    <span className="text-[10px] font-bold uppercase tracking-wider">Reloj</span>
                   </button>
                 </>
               )}
@@ -385,7 +387,7 @@ const MainContent: React.FC = () => {
                     }`}
                   >
                     <Timer className={`w-5 h-5 mb-0.5 ${athleteTab === 'timer' ? 'stroke-[2.5]' : ''}`} />
-                    <span className="text-[10px] font-bold uppercase tracking-wider">Reloj WOD</span>
+                    <span className="text-[10px] font-bold uppercase tracking-wider">Reloj</span>
                   </button>
 
                   <button

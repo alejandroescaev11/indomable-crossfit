@@ -99,6 +99,7 @@ export const AthleteManagementView: React.FC = () => {
   const [renewPlanName, setRenewPlanName] = useState('Mensual Ilimitado Pro');
   const [renewDurationDays, setRenewDurationDays] = useState(30);
   const [renewDiscipline, setRenewDiscipline] = useState<AthleteDiscipline>('crossfit');
+  const [renewStartDate, setRenewStartDate] = useState(new Date().toISOString().split('T')[0]);
 
   // Edit Athlete Form State
   const [editName, setEditName] = useState('');
@@ -381,6 +382,7 @@ export const AthleteManagementView: React.FC = () => {
       defaultPlanName.includes('Anual') ? 365 :
       defaultPlanName.includes('Diario') ? 1 : 30
     ));
+    setRenewStartDate(new Date().toISOString().split('T')[0]);
     setIsRenewModalOpen(true);
   };
 
@@ -396,8 +398,8 @@ export const AthleteManagementView: React.FC = () => {
     setIsSubmittingRenew(true);
     try {
       const res = isPending
-        ? await approveAthleteMembership(selectedAthlete.id, renewPlanName, renewDurationDays, undefined, renewDiscipline)
-        : await renewAthleteMembership(selectedAthlete.id, renewPlanName, renewDurationDays, undefined, renewDiscipline);
+        ? await approveAthleteMembership(selectedAthlete.id, renewPlanName, renewDurationDays, undefined, renewDiscipline, renewStartDate)
+        : await renewAthleteMembership(selectedAthlete.id, renewPlanName, renewDurationDays, undefined, renewDiscipline, renewStartDate);
 
       if (!res.success) {
         setActionToast({
@@ -1784,19 +1786,41 @@ export const AthleteManagementView: React.FC = () => {
                 </select>
               </div>
 
-              <div>
-                <label className="block font-bold text-zinc-300 mb-1">Duración de Vigencia (Días)</label>
-                <input
-                  type="number"
-                  min="1"
-                  value={renewDurationDays}
-                  onChange={(e) => setRenewDurationDays(parseInt(e.target.value, 10) || 30)}
-                  className="w-full rounded-xl border border-zinc-800 bg-zinc-900 p-2.5 text-white focus:border-red-600 focus:outline-none"
-                />
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block font-bold text-zinc-300 mb-1">Fecha de Inicio</label>
+                  <input
+                    type="date"
+                    value={renewStartDate}
+                    onChange={(e) => setRenewStartDate(e.target.value)}
+                    className="w-full rounded-xl border border-zinc-800 bg-zinc-900 p-2.5 text-white focus:border-red-600 focus:outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="block font-bold text-zinc-300 mb-1">Duración (Días)</label>
+                  <input
+                    type="number"
+                    min="1"
+                    value={renewDurationDays}
+                    onChange={(e) => setRenewDurationDays(parseInt(e.target.value, 10) || 30)}
+                    className="w-full rounded-xl border border-zinc-800 bg-zinc-900 p-2.5 text-white focus:border-red-600 focus:outline-none"
+                  />
+                </div>
               </div>
 
               <p className="text-[11px] text-zinc-400 bg-zinc-900 p-3 rounded-xl border border-zinc-800">
-                La fecha de inicio se actualizará a hoy y la vigencia vencerá en {renewDurationDays} días. El estado cambiará a <strong>ACTIVO</strong> y se enviará automáticamente un correo de confirmación a <strong>{selectedAthlete.email}</strong>.
+                La fecha de inicio será <strong>{renewStartDate}</strong> y la vigencia vencerá el{' '}
+                <strong className="text-white">
+                  {(() => {
+                    try {
+                      const d = new Date(renewStartDate + 'T00:00:00');
+                      d.setDate(d.getDate() + (renewDurationDays > 0 ? renewDurationDays : 30));
+                      return d.toISOString().split('T')[0];
+                    } catch {
+                      return '---';
+                    }
+                  })()}
+                </strong> ({renewDurationDays} días). El estado cambiará a <strong>ACTIVO</strong> y se enviará el correo a <strong>{selectedAthlete.email}</strong>.
               </p>
 
               <div className="flex gap-2 pt-2">
