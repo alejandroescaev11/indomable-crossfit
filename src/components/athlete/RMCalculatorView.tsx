@@ -398,7 +398,7 @@ export const RMCalculatorView: React.FC<{ initialExercise?: string }> = ({
             {[
               { id: 'all', label: 'Todos' },
               { id: 'levantamiento', label: '🏋️ Levantamiento' },
-              { id: 'fuerza', label: '🏋️ Musculación' },
+              { id: 'fuerza', label: '💪 Musculación' },
             ].map((cat) => (
               <button
                 key={cat.id}
@@ -645,31 +645,6 @@ export const RMCalculatorView: React.FC<{ initialExercise?: string }> = ({
                 </div>
               </div>
             </div>
-
-            {/* Selector de barra olímpica */}
-            <div className="flex items-center justify-between p-2.5 rounded-xl bg-black/60 border border-zinc-800 text-xs">
-              <span className="text-zinc-400 font-medium">Barra Olímpica:</span>
-              <div className="flex gap-1">
-                <button
-                  type="button"
-                  onClick={() => setBarbellWeight(20)}
-                  className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition ${
-                    barbellWeight === 20 ? 'bg-red-600 text-white' : 'bg-zinc-850 text-zinc-400'
-                  }`}
-                >
-                  {activeUnit === 'kg' ? '20 kg (Hombres)' : '45 lbs'}
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setBarbellWeight(15)}
-                  className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition ${
-                    barbellWeight === 15 ? 'bg-red-600 text-white' : 'bg-zinc-850 text-zinc-400'
-                  }`}
-                >
-                  {activeUnit === 'kg' ? '15 kg (Mujeres)' : '35 lbs'}
-                </button>
-              </div>
-            </div>
           </div>
 
           {/* Columna 2: Selector de % y Resultado */}
@@ -705,7 +680,7 @@ export const RMCalculatorView: React.FC<{ initialExercise?: string }> = ({
                     onClick={() => setTargetPercent(pct)}
                     className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition ${
                       targetPercent === pct
-                        ? 'bg-red-600 text-white'
+                        ? 'bg-red-700 text-white shadow-md'
                         : 'bg-zinc-900 text-zinc-400 hover:text-white'
                     }`}
                   >
@@ -733,7 +708,7 @@ export const RMCalculatorView: React.FC<{ initialExercise?: string }> = ({
               {/* Insignia de Repeticiones Teóricas */}
               <div className="mt-3 pt-2.5 border-t border-zinc-800/80 flex items-center justify-center gap-2">
                 <span className="text-xs text-zinc-400 font-semibold">Repeticiones Teóricas:</span>
-                <span className="px-2.5 py-0.5 rounded-lg bg-red-600 text-white font-black text-xs shadow">
+                <span className="px-2.5 py-0.5 rounded-lg bg-red-700 text-white font-black text-xs shadow-md">
                   ~{getTheoreticalReps(targetPercent)} rep{getTheoreticalReps(targetPercent) > 1 ? 's' : ''}
                 </span>
               </div>
@@ -818,7 +793,7 @@ export const RMCalculatorView: React.FC<{ initialExercise?: string }> = ({
                   onClick={() => setTargetPercent(pct)}
                   className={`p-2 rounded-xl border text-center transition ${
                     isSelected
-                      ? 'bg-red-600 border-red-500 text-white shadow-lg shadow-red-950/60 scale-105'
+                      ? 'bg-red-700 border-red-600 text-white shadow-md scale-105'
                       : 'bg-zinc-900/90 border-zinc-800 text-zinc-300 hover:border-zinc-700 hover:text-white'
                   }`}
                 >
@@ -1085,59 +1060,58 @@ export const RMCalculatorView: React.FC<{ initialExercise?: string }> = ({
         </div>
       )}
 
-      {/* BOTÓN FLOTANTE: Ajustes Rápidos de Unidad (KG/LBS) y Categoría sin desplazarse */}
-      <div className="fixed bottom-20 right-3 sm:right-6 z-40 flex items-center gap-2 bg-zinc-950/95 border border-red-900/60 p-2 rounded-2xl shadow-2xl backdrop-blur-md animate-in fade-in">
+      {/* BOTÓN FLOTANTE INFERIOR: Ajustes Rápidos de Unidad (KG/LBS) y Tipo de Barra (Hombre/Mujer) */}
+      <div className="fixed bottom-20 left-1/2 -translate-x-1/2 z-40 flex items-center gap-3 bg-zinc-950/95 border border-red-900/70 p-2 sm:p-2.5 rounded-2xl shadow-2xl backdrop-blur-md animate-in fade-in select-none">
         {/* Selector de Unidad */}
-        <div className="flex items-center rounded-xl bg-zinc-900 border border-zinc-800 p-0.5">
-          <button
-            type="button"
-            onClick={() => setActiveUnit('kg')}
-            className={`px-2.5 py-1 rounded-lg text-xs font-black transition ${
-              activeUnit === 'kg' ? 'bg-red-600 text-white shadow' : 'text-zinc-400 hover:text-white'
-            }`}
-          >
-            KG
-          </button>
-          <button
-            type="button"
-            onClick={() => setActiveUnit('lbs')}
-            className={`px-2.5 py-1 rounded-lg text-xs font-black transition ${
-              activeUnit === 'lbs' ? 'bg-red-600 text-white shadow' : 'text-zinc-400 hover:text-white'
-            }`}
-          >
-            LBS
-          </button>
+        <div className="flex items-center gap-1">
+          <span className="text-[10px] font-bold text-zinc-400 uppercase hidden sm:inline ml-1">Unidad:</span>
+          <div className="flex items-center rounded-xl bg-zinc-900 border border-zinc-800 p-0.5">
+            <button
+              type="button"
+              onClick={() => setActiveUnit('kg')}
+              className={`px-3 py-1 rounded-lg text-xs font-black transition ${
+                activeUnit === 'kg' ? 'bg-red-700 text-white shadow-md' : 'text-zinc-400 hover:text-white'
+              }`}
+            >
+              KG
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveUnit('lbs')}
+              className={`px-3 py-1 rounded-lg text-xs font-black transition ${
+                activeUnit === 'lbs' ? 'bg-red-700 text-white shadow-md' : 'text-zinc-400 hover:text-white'
+              }`}
+            >
+              LBS
+            </button>
+          </div>
         </div>
 
-        {/* Selector de Categoría */}
-        <div className="flex items-center rounded-xl bg-zinc-900 border border-zinc-800 p-0.5 text-xs font-bold">
-          <button
-            type="button"
-            onClick={() => setCategoryFilter('all')}
-            className={`px-2 py-1 rounded-lg text-[11px] transition ${
-              categoryFilter === 'all' ? 'bg-zinc-800 text-white' : 'text-zinc-400'
-            }`}
-          >
-            Todos
-          </button>
-          <button
-            type="button"
-            onClick={() => setCategoryFilter('levantamiento')}
-            className={`px-2 py-1 rounded-lg text-[11px] transition ${
-              categoryFilter === 'levantamiento' ? 'bg-red-600 text-white' : 'text-zinc-400'
-            }`}
-          >
-            Levantamiento
-          </button>
-          <button
-            type="button"
-            onClick={() => setCategoryFilter('fuerza')}
-            className={`px-2 py-1 rounded-lg text-[11px] transition ${
-              categoryFilter === 'fuerza' ? 'bg-purple-600 text-white' : 'text-zinc-400'
-            }`}
-          >
-            Musculación
-          </button>
+        <div className="h-5 w-px bg-zinc-800" />
+
+        {/* Selector de Tipo de Barra */}
+        <div className="flex items-center gap-1">
+          <span className="text-[10px] font-bold text-zinc-400 uppercase hidden sm:inline">Barra:</span>
+          <div className="flex items-center rounded-xl bg-zinc-900 border border-zinc-800 p-0.5 text-xs font-bold">
+            <button
+              type="button"
+              onClick={() => setBarbellWeight(20)}
+              className={`px-2.5 py-1 rounded-lg text-[11px] transition ${
+                barbellWeight === 20 ? 'bg-red-700 text-white shadow-md' : 'text-zinc-400 hover:text-white'
+              }`}
+            >
+              {activeUnit === 'kg' ? '20kg (Hombre)' : '45lb (Hombre)'}
+            </button>
+            <button
+              type="button"
+              onClick={() => setBarbellWeight(15)}
+              className={`px-2.5 py-1 rounded-lg text-[11px] transition ${
+                barbellWeight === 15 ? 'bg-red-700 text-white shadow-md' : 'text-zinc-400 hover:text-white'
+              }`}
+            >
+              {activeUnit === 'kg' ? '15kg (Mujer)' : '35lb (Mujer)'}
+            </button>
+          </div>
         </div>
       </div>
     </div>

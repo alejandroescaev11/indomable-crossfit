@@ -68,6 +68,26 @@ El sistema maneja 4 tipos de sesión, todos gestionados por `GymContext`:
 
 ## 📅 HISTORIAL DE CAMBIOS
 
+### v0.11.0 — 2026-09-23
+**Rama/Commit:** `feat/softer-red-theme-floating-barbell-controls`
+
+#### ✨ Cambios
+- **[App.tsx & RMCalculatorView.tsx]**:
+  - **Paleta de Rojos Suavizada**: Tono rojo primario ajustado a carmesí profundo suave (`bg-red-700`, `from-red-900 to-red-700`) para reducir la intensidad visual en botones, insignias y gradientes de navegación.
+- **[RMCalculatorView.tsx]**:
+  - **Ajustes Rápidos Flotantes Rediseñados**: La barra flotante inferior se reubicó de forma centrada en la mitad inferior de la pantalla (`fixed bottom-20 left-1/2`). Ahora permite cambiar directamente las **Unidades** (`KG` / `LBS`) y el **Tipo de Barra Olímpica** (`Hombre 20kg / 45lb` vs `Mujer 15kg / 35lb`).
+  - **Limpieza de Interfaz**: Se removieron los selectores duplicados en línea del medio del formulario de cálculo de RMs.
+  - **Icono de Filtro Musculación**: Restaurado el icono de brazo fuerte `💪 Musculación` en la barra de filtros por tipo de ejercicio.
+- **[GymContext.tsx]**:
+  - Reafirmada la segregación estricta de roles para cuentas de Staff (Admin exclusivo para login Admin, Coach exclusivo para login Coach).
+
+#### 🗂️ Archivos Modificados
+- `src/App.tsx`
+- `src/components/athlete/RMCalculatorView.tsx`
+- `src/context/GymContext.tsx`
+
+---
+
 ### v0.10.0 — 2026-09-23
 **Rama/Commit:** `feat/staff-role-segregation-logo-and-rm-enhancements`
 

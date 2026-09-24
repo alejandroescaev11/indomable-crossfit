@@ -270,7 +270,7 @@ const MainContent: React.FC = () => {
                     }}
                     className={`relative flex flex-col items-center py-1.5 px-4 rounded-2xl transition-all ${
                       athleteTab === 'wod-booking'
-                        ? 'text-white font-black scale-110 bg-gradient-to-t from-red-700 to-red-500 shadow-lg shadow-red-600/50 -translate-y-1'
+                        ? 'text-white font-black scale-110 bg-gradient-to-t from-red-900 to-red-700 shadow-md shadow-red-950/60 -translate-y-1 border border-red-600/40'
                         : 'text-red-300 hover:text-white bg-red-950/60 hover:bg-red-900/60 border border-red-800/40'
                     }`}
                   >
