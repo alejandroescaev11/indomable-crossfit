@@ -68,6 +68,19 @@ El sistema maneja 4 tipos de sesión, todos gestionados por `GymContext`:
 
 ## 📅 HISTORIAL DE CAMBIOS
 
+### v0.15.0 — 2026-09-24
+**Rama/Commit:** `feat/accounting-dual-sheet-google-sync-and-user-control`
+
+#### ✨ Cambios
+- **[accountingService.ts]**:
+  - Actualizado `GOOGLE_APPS_SCRIPT_TEMPLATE` con soporte para sincronización dual en tiempo real: crea y mantiene automáticamente la pestaña `Contabilidad` (registro de ingresos) y la pestaña `Usuarios_y_Pagos` (historial acumulado por atleta, plan actual, fechas de vigencia y estado).
+  - Añadidas funciones de exportación masiva a archivos `.csv` compatibles con Microsoft Excel en español: `exportTransactionsToCSV` y `exportUsersToCSV`.
+- **[AdminAccountingView.tsx]**:
+  - Rediseño completo con navegación por pestañas: **📊 Finanzas & Ingresos** y **👥 Control de Usuarios & Historial**.
+  - **Pestaña Finanzas**: Métricas clave de ingresos, ticket promedio, desglose porcentual e interactivo por medios de pago (Nequi, Daviplata, Efectivo, Bre-B, Tarjetas/PSE), filtros por periodo y tabla de movimientos con baja/registro manual.
+  - **Pestaña Control de Usuarios**: Indicadores de membresías activas, por vencer (<= 3 días con alerta ámbar), vencidas/inactivas y pendientes de aprobación. Distribución de atletas por modalidad (CrossFit, Musculación, Personalizado). Tabla detallada con contacto, vigencias y total invertido por cada atleta.
+  - Botones de exportación instantánea en 1-click a CSV para ambas vistas.
+
 ### v0.14.0 — 2026-09-23
 **Rama/Commit:** `feat/exhaustive-color-palette-sweep-across-all-modules`
 
