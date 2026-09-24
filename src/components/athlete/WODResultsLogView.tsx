@@ -224,7 +224,7 @@ export const WODResultsLogView: React.FC<{ defaultWodTitle?: string }> = ({
           <button
             onClick={handleOpenModal}
             id="btn-add-wod-score"
-            className="flex items-center justify-center gap-2 rounded-xl bg-red-600 hover:bg-red-500 text-white px-4 py-2.5 text-xs font-extrabold uppercase tracking-wider shadow-lg shadow-red-950/60 transition active:scale-95 border border-red-500/40 shrink-0"
+            className="flex items-center justify-center gap-2 rounded-xl bg-red-800 hover:bg-red-700 text-white px-4 py-2.5 text-xs font-extrabold uppercase tracking-wider shadow-md shadow-red-950/60 transition active:scale-95 border border-red-700/50 shrink-0"
           >
             <Plus className="w-4 h-4 stroke-[3]" />
             <span>Registrar Mi Score</span>
@@ -238,7 +238,7 @@ export const WODResultsLogView: React.FC<{ defaultWodTitle?: string }> = ({
             onClick={() => setActiveTab('leaderboard')}
             className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition ${
               activeTab === 'leaderboard'
-                ? 'bg-red-600 text-white shadow-md shadow-red-950/50'
+                ? 'bg-red-800/90 text-white border border-red-700/60 shadow-md shadow-red-950/50'
                 : 'bg-zinc-900 text-zinc-400 hover:text-white border border-zinc-800'
             }`}
           >
@@ -254,7 +254,7 @@ export const WODResultsLogView: React.FC<{ defaultWodTitle?: string }> = ({
             onClick={() => setActiveTab('history')}
             className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition ${
               activeTab === 'history'
-                ? 'bg-red-600 text-white shadow-md shadow-red-950/50'
+                ? 'bg-red-800/90 text-white border border-red-700/60 shadow-md shadow-red-950/50'
                 : 'bg-zinc-900 text-zinc-400 hover:text-white border border-zinc-800'
             }`}
           >

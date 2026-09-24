@@ -68,6 +68,27 @@ El sistema maneja 4 tipos de sesión, todos gestionados por `GymContext`:
 
 ## 📅 HISTORIAL DE CAMBIOS
 
+### v0.13.0 — 2026-09-23
+**Rama/Commit:** `feat/systemwide-color-softening-and-exclusive-floating-rm-units`
+
+#### ✨ Cambios
+- **[RMCalculatorView.tsx]**:
+  - **Eliminación Total del Switch Superior de Unidades**: Removido el toggle de unidades de la cabecera superior. El control de unidades (`KG` / `LBS`) y barra (`20kg` / `15kg`) ahora reside de forma limpia y **exclusiva** en la barra flotante inferior.
+  - **Paleta de Rojos y Acentos Homogeneizada**: Homogeneizado el tono carmesí suave (`bg-red-800`, `border-red-700/60`) en los botones de la tabla referencial de repeticiones teóricas, insignia de repeticiones teóricas y botones de catálogo.
+- **[LoginView.tsx, WODTimerView.tsx, WODResultsLogView.tsx]**:
+  - **Atenuación General de Colores**: Aplicado el nuevo tono carmesí suave en los botones de inicio de sesión de atletas y staff, botón principal de inicio del timer, y botones de registro de scores en la pizarra.
+- **[WelcomeFeedView.tsx]**:
+  - **Atenuación de Acentos (Verde / Ámbar)**: Ajustado el verde del botón de WhatsApp a `bg-emerald-800 border-emerald-700/60` y las insignias de estado de membresía a tonos aterciopelados sobrios (`bg-emerald-800`, `bg-amber-800`, `bg-red-800`) para erradicar cualquier fatiga visual.
+
+#### 🗂️ Archivos Modificados
+- `src/components/athlete/RMCalculatorView.tsx`
+- `src/components/auth/LoginView.tsx`
+- `src/components/athlete/WODTimerView.tsx`
+- `src/components/athlete/WODResultsLogView.tsx`
+- `src/components/athlete/WelcomeFeedView.tsx`
+
+---
+
 ### v0.12.0 — 2026-09-23
 **Rama/Commit:** `feat/softened-red-theme-and-clean-rm-units`
 

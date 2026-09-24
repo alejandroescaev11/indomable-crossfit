@@ -392,7 +392,7 @@ export const LoginView: React.FC = () => {
                 type="submit"
                 id="btn-login-submit"
                 disabled={isLoading}
-                className="w-full flex items-center justify-center gap-2 rounded-xl bg-red-600 hover:bg-red-500 py-2.5 text-xs font-extrabold uppercase tracking-wider text-white shadow-lg shadow-red-950/60 transition active:scale-95 border border-red-500/40 disabled:opacity-50"
+                className="w-full flex items-center justify-center gap-2 rounded-xl bg-red-800 hover:bg-red-700 py-2.5 text-xs font-extrabold uppercase tracking-wider text-white shadow-md shadow-red-950/60 transition active:scale-95 border border-red-700/50 disabled:opacity-50"
               >
                 {isLoading ? (
                   <>
@@ -495,7 +495,7 @@ export const LoginView: React.FC = () => {
                   }}
                   className={`flex items-center justify-center gap-1.5 py-1.5 rounded-md font-bold uppercase tracking-wider text-[11px] transition ${
                     staffRole === 'coach'
-                      ? 'bg-red-600 text-white shadow'
+                      ? 'bg-red-800 text-white shadow'
                       : 'text-zinc-400 hover:text-zinc-200'
                   }`}
                 >
@@ -511,7 +511,7 @@ export const LoginView: React.FC = () => {
                   }}
                   className={`flex items-center justify-center gap-1.5 py-1.5 rounded-md font-bold uppercase tracking-wider text-[11px] transition ${
                     staffRole === 'admin'
-                      ? 'bg-amber-600 text-white shadow'
+                      ? 'bg-amber-700 text-white shadow'
                       : 'text-zinc-400 hover:text-zinc-200'
                   }`}
                 >
@@ -564,8 +564,8 @@ export const LoginView: React.FC = () => {
                   disabled={isLoading}
                   className={`w-full flex items-center justify-center gap-2 rounded-lg py-2 text-xs font-bold uppercase tracking-wider text-white transition disabled:opacity-50 ${
                     staffRole === 'admin'
-                      ? 'bg-amber-600 hover:bg-amber-500 shadow-md shadow-amber-950/50'
-                      : 'bg-red-600 hover:bg-red-500 shadow-md shadow-red-950/50'
+                      ? 'bg-amber-700 hover:bg-amber-600 shadow-md shadow-amber-950/50'
+                      : 'bg-red-800 hover:bg-red-700 shadow-md shadow-red-950/50'
                   }`}
                 >
                   {isLoading ? (

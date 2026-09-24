@@ -310,7 +310,7 @@ export const WelcomeFeedView: React.FC<WelcomeFeedViewProps> = ({ onNavigateTab,
               <button
                 type="button"
                 onClick={handleJoinWhatsApp}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold uppercase tracking-wider transition shadow-md shadow-emerald-950/60 active:scale-95"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-800 hover:bg-emerald-700 border border-emerald-700/60 text-white text-xs font-bold uppercase tracking-wider transition shadow-md shadow-emerald-950/60 active:scale-95"
               >
                 <MessageCircle className="w-3.5 h-3.5 fill-current" />
                 <span>Unirme</span>
@@ -463,14 +463,14 @@ export const WelcomeFeedView: React.FC<WelcomeFeedViewProps> = ({ onNavigateTab,
                       {/* Right: Plan Pill & Punch card badge */}
                       <div className="flex flex-col items-end text-right">
                         <span
-                          className={`px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider mb-1.5 shadow-sm ${
+                          className={`px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider mb-1.5 shadow-sm ${
                             isPending
-                              ? 'bg-amber-500 text-black'
+                              ? 'bg-amber-800 text-amber-100 border border-amber-700/60'
                               : isExpired
-                              ? 'bg-red-600 text-white'
+                              ? 'bg-red-800 text-red-100 border border-red-700/60'
                               : isNearExpiry
-                              ? 'bg-amber-500 text-black animate-pulse'
-                              : 'bg-emerald-500 text-black'
+                              ? 'bg-amber-800 text-amber-100 border border-amber-700/60 animate-pulse'
+                              : 'bg-emerald-800 text-emerald-100 border border-emerald-700/60'
                           }`}
                         >
                           {isPending

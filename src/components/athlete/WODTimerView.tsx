@@ -762,10 +762,10 @@ export const WODTimerView: React.FC = () => {
           <button
             type="button"
             onClick={togglePlayPause}
-            className={`flex-1 max-w-xs h-12 sm:h-14 rounded-2xl flex items-center justify-center gap-2 text-sm sm:text-base font-black uppercase tracking-wider text-white shadow-xl transition active:scale-95 border ${
+            className={`flex-1 max-w-xs h-12 sm:h-14 rounded-2xl flex items-center justify-center gap-2 text-sm sm:text-base font-black uppercase tracking-wider text-white shadow-md transition active:scale-95 border ${
               isRunning
-                ? 'bg-amber-600 hover:bg-amber-500 border-amber-400/50 shadow-amber-950/60'
-                : 'bg-red-600 hover:bg-red-500 border-red-500/50 shadow-red-950/60'
+                ? 'bg-amber-700 hover:bg-amber-600 border-amber-600/40 shadow-amber-950/60'
+                : 'bg-red-800 hover:bg-red-700 border-red-700/50 shadow-red-950/60'
             }`}
           >
             {isRunning ? (
