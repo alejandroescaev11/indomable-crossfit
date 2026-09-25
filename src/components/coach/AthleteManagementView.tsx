@@ -847,105 +847,86 @@ export const AthleteManagementView: React.FC = () => {
 
       {/* SECCIÓN DESTACADA: COMPROBANTES DE PAGO POR VERIFICAR (ADMIN) */}
       {role === 'admin' && pendingPaymentAthletes.length > 0 && (
-        <div className="rounded-2xl border border-amber-500/50 bg-gradient-to-r from-amber-950/60 via-zinc-950 to-zinc-950 p-5 shadow-2xl space-y-4 animate-in fade-in">
-          <div className="flex items-center justify-between pb-3 border-b border-amber-500/30">
+        <div className="rounded-2xl border border-amber-500/50 bg-gradient-to-r from-amber-950/60 via-zinc-950 to-zinc-950 p-4 sm:p-5 shadow-2xl space-y-3.5 animate-in fade-in">
+          <div className="flex items-center justify-between pb-2.5 border-b border-amber-500/30">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400 shrink-0 shadow-lg shadow-amber-950/60">
+              <div className="w-9 h-9 rounded-xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400 shrink-0 shadow-md">
                 <CreditCard className="w-5 h-5" />
               </div>
               <div>
                 <div className="flex items-center gap-2">
-                  <h3 className="text-base sm:text-lg font-black text-white uppercase font-['Teko'] tracking-wider">
+                  <h3 className="text-base sm:text-lg font-black text-white uppercase font-['Teko'] tracking-wider leading-none">
                     COMPROBANTES DE PAGO PENDIENTES POR APROBAR
                   </h3>
-                  <span className="px-2.5 py-0.5 rounded-full bg-amber-500 text-black font-black text-xs animate-pulse">
+                  <span className="px-2.5 py-0.5 rounded-full bg-amber-500 text-black font-black text-[11px] animate-pulse">
                     {pendingPaymentAthletes.length} PENDIENTE{pendingPaymentAthletes.length > 1 ? 'S' : ''}
                   </span>
                 </div>
-                <p className="text-xs text-zinc-400">
+                <p className="text-[11px] text-zinc-400">
                   Revisa la foto o captura del comprobante adjuntado por el atleta para validar el pago y activar su plan.
                 </p>
               </div>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
             {pendingPaymentAthletes.map((ath) => (
               <div
                 key={ath.id}
-                className="rounded-2xl bg-zinc-900/90 border border-amber-500/40 p-4 space-y-3.5 flex flex-col justify-between shadow-xl"
+                className="rounded-xl bg-zinc-900/90 border border-amber-500/40 p-3 flex items-center justify-between gap-3 shadow-lg hover:border-amber-400 transition"
               >
-                {/* Atleta & Plan */}
-                <div className="flex items-start justify-between gap-3">
-                  <div className="flex items-center gap-3">
+                {/* Miniatura / Avatar */}
+                <div
+                  onClick={() => setReceiptModalAthlete(ath)}
+                  className="relative w-14 h-14 rounded-xl border border-amber-500/40 bg-black overflow-hidden cursor-pointer shrink-0 group flex items-center justify-center"
+                  title="Clic para ampliar el comprobante"
+                >
+                  {ath.membership?.receiptUrl ? (
+                    <>
+                      <img
+                        src={ath.membership.receiptUrl}
+                        alt="Comprobante"
+                        className="h-full w-full object-cover group-hover:scale-110 transition duration-300"
+                      />
+                      <div className="absolute inset-0 bg-black/40 group-hover:bg-black/10 flex items-center justify-center transition">
+                        <ImageIcon className="w-4 h-4 text-amber-300 drop-shadow-md" />
+                      </div>
+                    </>
+                  ) : (
                     <AthleteAvatar athlete={ath} size="md" />
-                    <div>
-                      <h4 className="font-extrabold text-sm text-white leading-snug">{ath.name}</h4>
-                      <p className="text-xs text-zinc-400 font-mono">CC: {ath.documentId}</p>
-                      {ath.phone && <p className="text-[11px] text-zinc-500">Cel: {ath.phone}</p>}
-                    </div>
-                  </div>
+                  )}
                 </div>
 
-                <div className="p-3 rounded-xl bg-black/80 border border-zinc-800 space-y-1">
-                  <div className="flex justify-between items-center text-xs">
-                    <span className="text-zinc-400 font-medium">Plan Solicitado:</span>
-                    <span className="font-bold text-amber-400 px-2 py-0.5 rounded bg-amber-950/60 border border-amber-800/60">
+                {/* Atleta Info */}
+                <div className="min-w-0 flex-1">
+                  <h4 className="font-extrabold text-xs sm:text-sm text-white truncate leading-tight">{ath.name}</h4>
+                  <div className="flex items-center gap-1.5 flex-wrap mt-0.5">
+                    <span className="text-[10px] text-zinc-400 font-mono">CC: {ath.documentId}</span>
+                    <span className="font-bold text-amber-400 text-[10px] px-1.5 py-0.5 rounded bg-amber-950/80 border border-amber-800/60 truncate max-w-[120px]">
                       {ath.membership?.planName || 'Mensualidad'}
                     </span>
                   </div>
                   {ath.membership?.paymentReportedAt && (
-                    <div className="flex justify-between items-center text-[11px] pt-1 border-t border-zinc-850">
-                      <span className="text-zinc-500">Fecha de Reporte:</span>
-                      <span className="text-zinc-300 font-mono">
-                        {new Date(ath.membership.paymentReportedAt).toLocaleString('es-CO', {
-                          day: '2-digit',
-                          month: 'short',
-                          hour: '2-digit',
-                          minute: '2-digit',
-                        })}
-                      </span>
-                    </div>
+                    <span className="text-[10px] text-zinc-400 block font-mono mt-0.5 truncate">
+                      {new Date(ath.membership.paymentReportedAt).toLocaleDateString('es-CO', {
+                        day: '2-digit',
+                        month: 'short',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                      })}
+                    </span>
                   )}
                 </div>
 
-                {/* Previsualización del Comprobante (Imagen Miniatura + Botón Lightbox) */}
-                <div className="space-y-2">
-                  {ath.membership?.receiptUrl ? (
-                    <div
-                      onClick={() => setReceiptModalAthlete(ath)}
-                      className="group relative cursor-pointer rounded-xl border border-amber-500/40 bg-black overflow-hidden h-36 flex items-center justify-center transition hover:border-amber-400"
-                    >
-                      <img
-                        src={ath.membership.receiptUrl}
-                        alt="Comprobante de pago"
-                        className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-300 opacity-90 group-hover:opacity-100"
-                      />
-                      <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 flex items-center justify-center transition">
-                        <span className="px-3 py-1.5 rounded-xl bg-black/80 border border-amber-500/60 text-amber-300 font-bold text-xs flex items-center gap-1.5 shadow-lg group-hover:scale-110 transition-transform">
-                          <ImageIcon className="w-4 h-4 text-amber-400" />
-                          <span>Ampliar Comprobante</span>
-                        </span>
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="p-4 rounded-xl bg-zinc-950 border border-zinc-850 text-center text-xs text-zinc-500 italic">
-                      Sin foto adjunta (Registro directo)
-                    </div>
-                  )}
-                </div>
-
-                {/* Botón de Acción Principal */}
-                <div className="flex gap-2 pt-1">
-                  <button
-                    type="button"
-                    onClick={() => setReceiptModalAthlete(ath)}
-                    className="flex-1 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-black text-xs uppercase tracking-wider transition shadow-lg flex items-center justify-center gap-1.5 active:scale-95"
-                  >
-                    <Check className="w-4 h-4 stroke-[3]" />
-                    <span>Ver & Aprobar Pago</span>
-                  </button>
-                </div>
+                {/* Acción Directa */}
+                <button
+                  type="button"
+                  onClick={() => setReceiptModalAthlete(ath)}
+                  className="px-3 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-black text-xs uppercase tracking-wider transition shadow-md shrink-0 flex items-center gap-1 active:scale-95"
+                >
+                  <Check className="w-3.5 h-3.5 stroke-[3]" />
+                  <span>Ver & Activar</span>
+                </button>
               </div>
             ))}
           </div>
@@ -1147,14 +1128,14 @@ export const AthleteManagementView: React.FC = () => {
           return (
             <div
               key={ath.id}
-              className={`rounded-2xl border p-4 sm:p-5 transition-all flex flex-col lg:flex-row lg:items-center justify-between gap-4 ${
+              className={`rounded-2xl border p-4 sm:p-5 transition-all grid grid-cols-1 lg:grid-cols-12 gap-4 items-center ${
                 isCurrentSession
                   ? 'bg-zinc-900/90 border-red-600/50 shadow-lg shadow-red-950/20'
                   : 'bg-zinc-950 border-zinc-800/90 hover:border-zinc-750 shadow-md'
               }`}
             >
               {/* Athlete Info Header */}
-              <div className="flex items-start sm:items-center gap-3.5 min-w-0">
+              <div className="flex items-start sm:items-center gap-3.5 min-w-0 lg:col-span-5">
                 <div className="relative h-12 w-12 rounded-xl overflow-hidden bg-zinc-800 border border-zinc-700 shrink-0">
                   <AthleteAvatar avatar={ath.avatar} name={ath.name} size="lg" className="h-full w-full rounded-xl" />
                   {ath.membership.isActive && !isExpired ? (
@@ -1228,7 +1209,7 @@ export const AthleteManagementView: React.FC = () => {
               </div>
 
               {/* Membership & Status Details */}
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs bg-zinc-900/70 p-3 rounded-xl border border-zinc-800/80 min-w-[280px]">
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs bg-zinc-900/70 p-3 rounded-xl border border-zinc-800/80 min-w-0 lg:col-span-4">
                 <div>
                   <span className="text-[10px] text-zinc-500 uppercase font-bold block">Plan</span>
                   <span className="font-semibold text-zinc-200 truncate block">{ath.membership?.planName || 'Sin Plan'}</span>
@@ -1281,7 +1262,7 @@ export const AthleteManagementView: React.FC = () => {
               </div>
 
               {/* Action Buttons in Dark Crimson & Carbon Theme */}
-              <div className="flex items-center gap-1.5 shrink-0 flex-wrap justify-end">
+              <div className="flex items-center gap-1.5 shrink-0 flex-wrap justify-start lg:justify-end min-w-0 lg:col-span-3">
                 {ath.membership?.receiptUrl && (
                   <button
                     onClick={() => setReceiptModalAthlete(ath)}

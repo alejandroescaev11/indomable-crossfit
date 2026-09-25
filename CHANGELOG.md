@@ -23,6 +23,16 @@
 
 ---
 
+## 🚀 Versión 0.16.9 (2026-09-24) — Optimización del Diseño Responsive de Comprobantes de Pago en Ordenadores
+
+### 🎨 Diseño & UI
+- **`AthleteManagementView.tsx`**:
+  - **Sección Destacada de Comprobantes:** Se rediseñó el banner de *"COMPROBANTES DE PAGO PENDIENTES POR APROBAR"* para usar un formato compacto horizontal de tarjetas (`h-14` miniatura interactiva + datos en 1 sola fila). Se eliminó la imagen vertical de 144px de alto que saturaba la pantalla en escritorio.
+  - **Estructura Grid de 12 Columnas:** Se convirtió la fila de cada atleta en un Grid CSS estricto de 12 columnas (`col-span-5` info de atleta, `col-span-4` estado de membresía, `col-span-3` botones de acción), evitando colisiones, empalmes o sobreposiciones entre textos y botones en pantallas de computador.
+- **Deploy a Producción**: Actualización desplegada en Firebase Hosting.
+
+---
+
 ## 🚀 Versión 0.16.8 (2026-09-24) — Solución al ReferenceError: isNewExerciseModalOpen
 
 ### 🐛 Corregido
