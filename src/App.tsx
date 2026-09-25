@@ -429,8 +429,8 @@ const MainContent: React.FC = () => {
         </div>
       </nav>
 
-      {/* Floating WhatsApp Button for Athlete (Ubicar encima del botón de Ingreso al Box) */}
-      {role === 'athlete' && athleteTab === 'feed' && (
+      {/* Floating WhatsApp Button (Disponible para todos los usuarios) */}
+      {isAuthenticated && (
         <div className="fixed bottom-[7.5rem] sm:bottom-20 right-3.5 sm:right-6 z-40">
           {showWhatsAppMenu && (
             <div className="absolute bottom-13 right-0 w-64 rounded-2xl border border-emerald-800/80 bg-zinc-950 p-3 shadow-2xl z-50 text-zinc-200 space-y-2 animate-in fade-in slide-in-from-bottom-2">

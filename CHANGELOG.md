@@ -68,6 +68,16 @@ El sistema maneja 4 tipos de sesión, todos gestionados por `GymContext`:
 
 ## 📅 HISTORIAL DE CAMBIOS
 
+### v0.16.1 — 2026-09-24
+**Rama/Commit:** `fix/global-floating-whatsapp-and-novedades-header-enhancement`
+
+#### ✨ Cambios
+- **[App.tsx]**:
+  - Habilitado el botón flotante de WhatsApp para **todos los usuarios de la aplicación** (atletas, coaches y administradores).
+- **[WelcomeFeedView.tsx]**:
+  - Removido el letrero/tarjeta estática de "Comunidad Oficial INDOMABLE", delegando la interacción completa al botón flotante de WhatsApp.
+  - Aumentado el tamaño del letrero del inicio **"NOVEDADES & COMUNIDAD INDOMABLE"** (`text-2xl sm:text-3xl lg:text-4xl font-black`) para mayor jerarquía y presencia visual.
+
 ### v0.16.0 — 2026-09-24
 **Rama/Commit:** `feat/floating-whatsapp-menu-header-days-remaining-and-mobile-ui-optimization`
 

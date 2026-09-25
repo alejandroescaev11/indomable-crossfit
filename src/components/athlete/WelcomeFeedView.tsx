@@ -283,78 +283,28 @@ export const WelcomeFeedView: React.FC<WelcomeFeedViewProps> = ({ onNavigateTab,
 
   return (
     <div className="space-y-4 sm:space-y-5 animate-fadeIn pb-12">
-      {/* Tarjeta de Acceso al Grupo Oficial de WhatsApp INDOMABLE (Compacta) */}
-      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-zinc-950 via-zinc-900 to-emerald-950/30 border border-emerald-500/30 px-3.5 py-2.5 sm:px-4 sm:py-3 shadow-md">
-        <div className="relative z-10 flex items-center justify-between gap-3">
-          <div className="flex items-center gap-2.5 min-w-0">
-            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400 shrink-0 shadow-sm">
-              <MessageCircle className="w-4 h-4 sm:w-5 sm:h-5" />
-            </div>
-            <div className="min-w-0">
-              <div className="flex items-center gap-1.5">
-                <h3 className="text-sm sm:text-base font-black text-white uppercase tracking-tight font-teko leading-none">
-                  Comunidad Oficial INDOMABLE
-                </h3>
-                {gymSettings?.whatsappGroupUrl && (
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse shrink-0" />
-                )}
-              </div>
-              <p className="text-[11px] text-zinc-400 truncate">
-                Canal oficial de WhatsApp para novedades y avisos
-              </p>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-1.5 shrink-0">
-            {gymSettings?.whatsappGroupUrl ? (
-              <button
-                type="button"
-                onClick={handleJoinWhatsApp}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-800 hover:bg-emerald-700 border border-emerald-700/60 text-white text-xs font-bold uppercase tracking-wider transition shadow-md shadow-emerald-950/60 active:scale-95"
-              >
-                <MessageCircle className="w-3.5 h-3.5 fill-current" />
-                <span>Unirme</span>
-                <ExternalLink className="w-3 h-3" />
-              </button>
-            ) : isAdmin ? (
-              <button
-                type="button"
-                onClick={handleOpenWhatsAppModal}
-                className="flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold uppercase tracking-wider transition"
-              >
-                <Link className="w-3.5 h-3.5" />
-                <span>Configurar</span>
-              </button>
-            ) : (
-              <span className="text-[10px] text-zinc-500 italic px-1">
-                Próximamente
-              </span>
-            )}
-
-            {isAdmin && gymSettings?.whatsappGroupUrl && (
-              <button
-                type="button"
-                onClick={handleOpenWhatsAppModal}
-                className="p-1.5 rounded-lg bg-zinc-900 hover:bg-zinc-850 border border-zinc-800 text-zinc-400 hover:text-white transition"
-                title="Configurar enlace de WhatsApp (Solo Admin)"
-              >
-                <Settings className="w-3.5 h-3.5" />
-              </button>
-            )}
-          </div>
-        </div>
-      </div>
-
       {/* Section Header for Feed & Announcements */}
-      <div className="flex items-center justify-between gap-3 pb-1 border-b border-zinc-850">
+      <div className="flex items-center justify-between gap-3 pb-2 border-b border-zinc-850">
         <div>
-          <h2 className="text-xl sm:text-2xl font-black text-white uppercase font-['Teko'] tracking-wide">
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black text-white uppercase font-['Teko'] tracking-wider leading-none">
             NOVEDADES & COMUNIDAD INDOMABLE
           </h2>
-          <p className="text-[11px] sm:text-xs text-zinc-400">
-            Avisos importantes del Box, eventos y canal oficial.
+          <p className="text-xs sm:text-sm text-zinc-400 mt-1">
+            Avisos importantes del Box, eventos y comunicados oficiales.
           </p>
         </div>
+
+        {isAdmin && (
+          <button
+            type="button"
+            onClick={handleOpenWhatsAppModal}
+            className="p-2 rounded-xl bg-zinc-900 hover:bg-zinc-850 border border-zinc-800 text-zinc-400 hover:text-white transition text-xs flex items-center gap-1.5"
+            title="Configurar enlace de WhatsApp (Solo Admin)"
+          >
+            <Settings className="w-4 h-4" />
+            <span className="hidden sm:inline font-bold">Configurar WhatsApp</span>
+          </button>
+        )}
       </div>
 
       {/* 1. Guía para iPhone cuando está en Safari (No instalado aún) */}
