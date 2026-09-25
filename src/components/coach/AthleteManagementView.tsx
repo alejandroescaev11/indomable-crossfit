@@ -123,7 +123,7 @@ export const AthleteManagementView: React.FC = () => {
   const [receiptModalAthlete, setReceiptModalAthlete] = useState<AthleteProfile | null>(null);
 
   const pendingPaymentAthletes = useMemo(() => {
-    return athletes.filter((a) => a.membership.isPendingApproval || a.membership.receiptUrl);
+    return athletes.filter((a) => a?.membership?.isPendingApproval || a?.membership?.receiptUrl);
   }, [athletes]);
 
   const handleFormAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -169,7 +169,7 @@ export const AthleteManagementView: React.FC = () => {
         (ath.documentId && ath.documentId.toLowerCase().includes(q)) ||
         ath.email.toLowerCase().includes(q) ||
         (ath.phone && ath.phone.includes(q)) ||
-        ath.membership.planName.toLowerCase().includes(q);
+        (ath.membership?.planName && ath.membership.planName.toLowerCase().includes(q));
 
       if (!matchesSearch) return false;
 

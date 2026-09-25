@@ -68,6 +68,16 @@ El sistema maneja 4 tipos de sesión, todos gestionados por `GymContext`:
 
 ## 📅 HISTORIAL DE CAMBIOS
 
+### v0.16.5 — 2026-09-24
+**Rama/Commit:** `fix/admin-panel-null-safety-and-custom-rm-input`
+
+#### ✨ Cambios
+- **[AthleteManagementView.tsx]**:
+  - Añadida encadenación opcional (`?.membership`) a todas las evaluaciones de la lista de atletas en las métricas y filtros del panel de administrador, garantizando que el panel cargue de forma 100% estable ante cualquier registro con campos incompletos.
+- **[RMCalculatorView.tsx]**:
+  - Eliminadas las listas desplegables predefinidas al registrar o editar un RM. Ahora se utiliza un campo de entrada de texto directo (`<input type="text" />`) donde el atleta escribe libremente su ejercicio.
+  - Eliminado el catálogo predeterminado global del selector de cálculo. El selector desplegable de la calculadora se alimenta **únicamente** de los RMs efectivamente registrados por el atleta.
+
 ### v0.16.4 — 2026-09-24
 **Rama/Commit:** `feat/payment-receipt-lightbox-and-rm-module-unification`
 

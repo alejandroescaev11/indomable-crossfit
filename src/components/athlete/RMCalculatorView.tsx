@@ -1,7 +1,6 @@
-import React, { useState, useMemo, useRef } from 'react';
+import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { useGym } from '../../context/GymContext';
-import { PersonalRecord, WeightUnit, CustomExercise } from '../../types';
-import { DEFAULT_EXERCISES } from '../../data/seedData';
+import { PersonalRecord, WeightUnit } from '../../types';
 import {
   Trophy,
   Percent,
@@ -32,11 +31,9 @@ export const convertWeight = (
 ): number => {
   if (fromUnit === toUnit) return val;
   if (fromUnit === 'lbs' && toUnit === 'kg') {
-    // 1 lb = 0.453592 kg -> 175 lbs / 2.20462 = 79.378 -> 79.4 kg
     return Math.round((val / 2.20462) * 10) / 10;
   }
   if (fromUnit === 'kg' && toUnit === 'lbs') {
-    // 79.4 kg * 2.20462 = 175.04 -> 175 lbs
     return Math.round((val * 2.20462) * 10) / 10;
   }
   return val;
@@ -88,9 +85,6 @@ export const RMCalculatorView: React.FC<{ initialExercise?: string }> = ({
     deleteRM,
     currentAthleteId,
     activeUnit,
-    setActiveUnit,
-    customExercises,
-    addCustomExercise,
   } = useGym();
 
   const calculatorRef = useRef<HTMLDivElement>(null);
@@ -100,10 +94,28 @@ export const RMCalculatorView: React.FC<{ initialExercise?: string }> = ({
   const [categoryFilter, setCategoryFilter] = useState<'all' | 'levantamiento' | 'fuerza'>('all');
   const [isTableExpanded, setIsTableExpanded] = useState(true);
 
-  // Selected RM for calculation
+  // Filter athlete's RMs
+  const athleteRMs = useMemo(() => {
+    return rms.filter((r) => r.athleteId === currentAthleteId);
+  }, [rms, currentAthleteId]);
+
+  // List of unique exercise names already registered by this athlete
+  const registeredExerciseNames = useMemo(() => {
+    const names = athleteRMs.map((r) => r.exerciseName.trim());
+    return Array.from(new Set(names));
+  }, [athleteRMs]);
+
+  // Selected RM for calculation (default to initialExercise or first registered RM)
   const [selectedExerciseName, setSelectedExerciseName] = useState<string>(
-    initialExercise || 'Clean & Jerk'
+    initialExercise || ''
   );
+
+  useEffect(() => {
+    if (!selectedExerciseName && registeredExerciseNames.length > 0) {
+      setSelectedExerciseName(registeredExerciseNames[0]);
+    }
+  }, [registeredExerciseNames, selectedExerciseName]);
+
   const [customWeightInput, setCustomWeightInput] = useState<string>('');
   const [targetPercent, setTargetPercent] = useState<number>(75);
   const [barbellWeight, setBarbellWeight] = useState<number>(20); // 20kg / 45lbs
@@ -117,34 +129,6 @@ export const RMCalculatorView: React.FC<{ initialExercise?: string }> = ({
   const [formReps, setFormReps] = useState<number>(1);
   const [formDate, setFormDate] = useState(new Date().toISOString().split('T')[0]);
   const [formNotes, setFormNotes] = useState('');
-  const [isCustomExerciseInput, setIsCustomExerciseInput] = useState(false);
-
-  // Modal for Adding New Exercise definition to system
-  const [isNewExerciseModalOpen, setIsNewExerciseModalOpen] = useState(false);
-  const [newExName, setNewExName] = useState('');
-  const [newExCategory, setNewExCategory] = useState<'olympic' | 'powerlifting'>('powerlifting');
-  const [isSavingEx, setIsSavingEx] = useState(false);
-
-  // All known exercises list (DEFAULT + Custom)
-  const allExerciseOptions = useMemo(() => {
-    const list: { name: string; category: string }[] = [
-      ...DEFAULT_EXERCISES,
-      ...customExercises.map((c) => ({ name: c.name, category: c.category })),
-    ];
-    // Deduplicate by lowercase name
-    const seen = new Set<string>();
-    return list.filter((item) => {
-      const lower = item.name.toLowerCase().trim();
-      if (seen.has(lower)) return false;
-      seen.add(lower);
-      return true;
-    });
-  }, [customExercises]);
-
-  // Filter athlete's RMs
-  const athleteRMs = useMemo(() => {
-    return rms.filter((r) => r.athleteId === currentAthleteId);
-  }, [rms, currentAthleteId]);
 
   // Filtered RMs according to search query and simplified category ('levantamiento' o 'fuerza')
   const filteredRMs = useMemo(() => {
@@ -235,13 +219,12 @@ export const RMCalculatorView: React.FC<{ initialExercise?: string }> = ({
   // Modal actions
   const handleOpenAddModal = (initialName?: string) => {
     setEditingRecord(null);
-    setFormExercise(initialName || allExerciseOptions[0]?.name || 'Clean & Jerk');
+    setFormExercise(initialName || '');
     setFormWeight('');
     setFormCategory('olympic');
     setFormReps(1);
     setFormDate(new Date().toISOString().split('T')[0]);
     setFormNotes('');
-    setIsCustomExerciseInput(false);
     setIsModalOpen(true);
   };
 
@@ -583,35 +566,28 @@ export const RMCalculatorView: React.FC<{ initialExercise?: string }> = ({
           <div className="space-y-4">
             <div>
               <label className="block text-xs font-bold text-zinc-300 mb-1">
-                Cambiar Ejercicio para el Cálculo
+                Seleccionar Ejercicio Registrado
               </label>
-              <select
-                value={selectedExerciseName}
-                onChange={(e) => {
-                  setSelectedExerciseName(e.target.value);
-                  setCustomWeightInput('');
-                }}
-                className="w-full rounded-xl border border-zinc-700 bg-black p-2.5 text-xs sm:text-sm font-semibold text-white focus:border-red-600 focus:outline-none cursor-pointer"
-              >
-                {athleteRMs.length > 0 && (
-                  <optgroup label="🏆 Tus RMs Registrados">
-                    {Array.from(new Set(athleteRMs.map((r) => r.exerciseName))).map((name) => (
-                      <option key={name} value={name}>
-                        {name}
-                      </option>
-                    ))}
-                  </optgroup>
-                )}
-                <optgroup label="🏋️ Catálogo General de Ejercicios">
-                  {allExerciseOptions
-                    .filter((ex) => !athleteRMs.some((r) => r.exerciseName.toLowerCase() === ex.name.toLowerCase()))
-                    .map((ex) => (
-                      <option key={ex.name} value={ex.name}>
-                        {ex.name}
-                      </option>
-                    ))}
-                </optgroup>
-              </select>
+              {registeredExerciseNames.length > 0 ? (
+                <select
+                  value={selectedExerciseName}
+                  onChange={(e) => {
+                    setSelectedExerciseName(e.target.value);
+                    setCustomWeightInput('');
+                  }}
+                  className="w-full rounded-xl border border-zinc-700 bg-black p-2.5 text-xs sm:text-sm font-semibold text-white focus:border-red-600 focus:outline-none cursor-pointer"
+                >
+                  {registeredExerciseNames.map((name) => (
+                    <option key={name} value={name}>
+                      {name}
+                    </option>
+                  ))}
+                </select>
+              ) : (
+                <div className="p-3 rounded-xl bg-zinc-900 border border-zinc-800 text-xs text-zinc-400">
+                  Aún no has registrado ningún RM. Haz clic en <strong>"+ Nuevo RM"</strong> arriba para registrar tu primera marca.
+                </div>
+              )}
             </div>
 
             {/* Display Base 1RM con Conversión Activa */}
@@ -845,69 +821,15 @@ export const RMCalculatorView: React.FC<{ initialExercise?: string }> = ({
                 <label className="block text-xs font-bold text-zinc-300 mb-1">
                   Nombre del Ejercicio
                 </label>
-                <select
-                  value={
-                    isCustomExerciseInput
-                      ? '__custom__'
-                      : allExerciseOptions.some(
-                          (e) => e.name.toLowerCase() === formExercise.toLowerCase()
-                        )
-                      ? allExerciseOptions.find(
-                          (e) => e.name.toLowerCase() === formExercise.toLowerCase()
-                        )?.name
-                      : '__custom__'
-                  }
-                  onChange={(e) => {
-                    const val = e.target.value;
-                    if (val === '__custom__') {
-                      setIsCustomExerciseInput(true);
-                      setFormExercise('');
-                    } else {
-                      setIsCustomExerciseInput(false);
-                      setFormExercise(val);
-                      const matched = allExerciseOptions.find((ex) => ex.name === val);
-                      if (matched) {
-                        const grp = getExerciseGroup(matched.category, matched.name);
-                        setFormCategory(grp === 'levantamiento' ? 'olympic' : 'powerlifting');
-                      }
-                    }
-                  }}
-                  className="w-full rounded-xl border border-zinc-700 bg-zinc-900 p-2.5 text-xs sm:text-sm text-white focus:border-red-600 focus:outline-none font-semibold cursor-pointer"
-                >
-                  <optgroup label="🏋️ Levantamiento (Olímpico / Halterofilia)">
-                    {allExerciseOptions
-                      .filter((e) => getExerciseGroup(e.category, e.name) === 'levantamiento')
-                      .map((e) => (
-                        <option key={e.name} value={e.name}>
-                          {e.name}
-                        </option>
-                      ))}
-                  </optgroup>
-                  <optgroup label="💪 Fuerza (Powerlifting & Musculación)">
-                    {allExerciseOptions
-                      .filter((e) => getExerciseGroup(e.category, e.name) === 'fuerza')
-                      .map((e) => (
-                        <option key={e.name} value={e.name}>
-                          {e.name}
-                        </option>
-                      ))}
-                  </optgroup>
-                  <option value="__custom__">✍️ Escribir otro ejercicio personalizado...</option>
-                </select>
-
-                {isCustomExerciseInput && (
-                  <div className="mt-2 animate-in fade-in">
-                    <input
-                      type="text"
-                      required
-                      value={formExercise}
-                      onChange={(e) => setFormExercise(e.target.value)}
-                      placeholder="Escribe el nombre del ejercicio..."
-                      className="w-full rounded-xl border border-red-700/60 bg-black p-2.5 text-xs sm:text-sm text-white placeholder-zinc-500 focus:border-red-600 focus:outline-none"
-                      autoFocus
-                    />
-                  </div>
-                )}
+                <input
+                  type="text"
+                  required
+                  value={formExercise}
+                  onChange={(e) => setFormExercise(e.target.value)}
+                  placeholder="Ej: Clean & Jerk, Back Squat, Snatch, Bench Press..."
+                  className="w-full rounded-xl border border-zinc-700 bg-black p-2.5 text-xs sm:text-sm text-white placeholder-zinc-500 focus:border-red-600 focus:outline-none font-semibold"
+                  autoFocus
+                />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
