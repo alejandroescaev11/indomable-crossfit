@@ -273,15 +273,6 @@ export const RMCalculatorView: React.FC<{ initialExercise?: string }> = ({
     calculatorRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
 
-  const handleSaveCustomExercise = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!newExName.trim()) return;
-    setIsSavingEx(true);
-    await addCustomExercise(newExName.trim(), newExCategory);
-    setIsSavingEx(false);
-    setIsNewExerciseModalOpen(false);
-    setNewExName('');
-  };
 
   return (
     <div className="space-y-6 animate-fadeIn pb-12">
@@ -925,75 +916,7 @@ export const RMCalculatorView: React.FC<{ initialExercise?: string }> = ({
         </div>
       )}
 
-      {/* Modal para Agregar Nuevo Ejercicio al Catálogo */}
-      {isNewExerciseModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 backdrop-blur-sm p-4 animate-in fade-in">
-          <div className="w-full max-w-sm rounded-2xl bg-zinc-950 border border-zinc-800 p-6 shadow-2xl relative text-zinc-100">
-            <button
-              type="button"
-              onClick={() => setIsNewExerciseModalOpen(false)}
-              className="absolute top-4 right-4 p-1 rounded-lg text-zinc-400 hover:text-white"
-            >
-              <X className="w-5 h-5" />
-            </button>
 
-            <h3 className="font-extrabold text-lg text-white mb-1 font-teko tracking-wide uppercase flex items-center gap-2">
-              <Dumbbell className="w-5 h-5 text-red-500" />
-              Nuevo Ejercicio al Catálogo
-            </h3>
-            <p className="text-xs text-zinc-400 mb-4">
-              Agrega un movimiento nuevo para que esté disponible en toda la plataforma.
-            </p>
-
-            <form onSubmit={handleSaveCustomExercise} className="space-y-4">
-              <div>
-                <label className="block text-xs font-bold text-zinc-300 mb-1">
-                  Nombre del Ejercicio *
-                </label>
-                <input
-                  type="text"
-                  required
-                  value={newExName}
-                  onChange={(e) => setNewExName(e.target.value)}
-                  placeholder="Ej: Press Francés con Barra Z"
-                  className="w-full rounded-xl border border-zinc-700 bg-zinc-900 p-2.5 text-xs sm:text-sm text-white focus:border-red-600 focus:outline-none"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold text-zinc-300 mb-1">
-                  Categoría
-                </label>
-                <select
-                  value={newExCategory}
-                  onChange={(e) => setNewExCategory(e.target.value as any)}
-                  className="w-full rounded-xl border border-zinc-700 bg-zinc-900 p-2.5 text-xs text-white focus:border-red-600 focus:outline-none"
-                >
-                  <option value="olympic">Levantamiento (Olímpico / Halterofilia)</option>
-                  <option value="powerlifting">Fuerza (Sentadillas, Bancas, Musculación)</option>
-                </select>
-              </div>
-
-              <div className="flex gap-2 pt-2">
-                <button
-                  type="submit"
-                  disabled={isSavingEx}
-                  className="flex-1 rounded-xl bg-red-800 hover:bg-red-700 py-2.5 text-xs font-bold text-white shadow-md shadow-red-950/60 transition active:scale-95 border border-red-700/50 disabled:opacity-50"
-                >
-                  {isSavingEx ? 'Guardando...' : 'Crear Ejercicio'}
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setIsNewExerciseModalOpen(false)}
-                  className="rounded-xl bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 px-4 py-2.5 text-xs font-semibold text-zinc-300"
-                >
-                  Cancelar
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
 
       {/* BOTÓN FLOTANTE INFERIOR: Ajustes Rápidos de Unidad (KG/LBS) y Tipo de Barra (Hombre/Mujer) */}
       <div className="fixed bottom-20 left-1/2 -translate-x-1/2 z-40 flex items-center gap-3 bg-zinc-950/95 border border-red-900/70 p-2 sm:p-2.5 rounded-2xl shadow-2xl backdrop-blur-md animate-in fade-in select-none">

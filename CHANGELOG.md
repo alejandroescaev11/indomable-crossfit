@@ -23,6 +23,14 @@
 
 ---
 
+## 🚀 Versión 0.16.8 (2026-09-24) — Solución al ReferenceError: isNewExerciseModalOpen
+
+### 🐛 Corregido
+- **`RMCalculatorView.tsx`**: Se eliminó una referencia obsoleta en JSX a la variable `isNewExerciseModalOpen` (el modal residual para agregar nuevo ejercicio al catálogo predefinido). Esta referencia provocaba un `ReferenceError` al renderizar el componente.
+- **Deploy a Producción**: Se compiló y desplegó la actualización limpia a Firebase Hosting.
+
+---
+
 ## ⚠️ CONSIDERACIONES CRÍTICAS PARA DESARROLLADORES
 
 ### 1. Variables de Entorno

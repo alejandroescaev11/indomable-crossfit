@@ -845,29 +845,110 @@ export const AthleteManagementView: React.FC = () => {
         </div>
       </div>
 
-      {/* Alert banner if athletes are pending approval (Admin only) */}
-      {role === 'admin' && metrics.pending > 0 && (
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 rounded-2xl bg-amber-950/40 border border-amber-600/50 shadow-xl text-xs">
-          <div className="flex items-center gap-3 text-amber-200">
-            <div className="w-9 h-9 rounded-xl bg-amber-900/60 border border-amber-600/40 flex items-center justify-center text-amber-400 shrink-0">
-              <Clock className="w-5 h-5" />
-            </div>
-            <div>
-              <span className="font-extrabold text-sm text-white block">
-                {metrics.pending} solicitud(es) de nuevo registro pendiente(s) de activación
-              </span>
-              <span className="text-zinc-400">
-                Atletas que completaron su registro y requieren que el staff valide su pago y active su mensualidad.
-              </span>
+      {/* SECCIÓN DESTACADA: COMPROBANTES DE PAGO POR VERIFICAR (ADMIN) */}
+      {role === 'admin' && pendingPaymentAthletes.length > 0 && (
+        <div className="rounded-2xl border border-amber-500/50 bg-gradient-to-r from-amber-950/60 via-zinc-950 to-zinc-950 p-5 shadow-2xl space-y-4 animate-in fade-in">
+          <div className="flex items-center justify-between pb-3 border-b border-amber-500/30">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400 shrink-0 shadow-lg shadow-amber-950/60">
+                <CreditCard className="w-5 h-5" />
+              </div>
+              <div>
+                <div className="flex items-center gap-2">
+                  <h3 className="text-base sm:text-lg font-black text-white uppercase font-['Teko'] tracking-wider">
+                    COMPROBANTES DE PAGO PENDIENTES POR APROBAR
+                  </h3>
+                  <span className="px-2.5 py-0.5 rounded-full bg-amber-500 text-black font-black text-xs animate-pulse">
+                    {pendingPaymentAthletes.length} PENDIENTE{pendingPaymentAthletes.length > 1 ? 'S' : ''}
+                  </span>
+                </div>
+                <p className="text-xs text-zinc-400">
+                  Revisa la foto o captura del comprobante adjuntado por el atleta para validar el pago y activar su plan.
+                </p>
+              </div>
             </div>
           </div>
-          <button
-            type="button"
-            onClick={() => setStatusFilter('pending')}
-            className="px-3.5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-black text-xs transition shrink-0 shadow-md self-start sm:self-auto"
-          >
-            Revisar Pendientes
-          </button>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {pendingPaymentAthletes.map((ath) => (
+              <div
+                key={ath.id}
+                className="rounded-2xl bg-zinc-900/90 border border-amber-500/40 p-4 space-y-3.5 flex flex-col justify-between shadow-xl"
+              >
+                {/* Atleta & Plan */}
+                <div className="flex items-start justify-between gap-3">
+                  <div className="flex items-center gap-3">
+                    <AthleteAvatar athlete={ath} size="md" />
+                    <div>
+                      <h4 className="font-extrabold text-sm text-white leading-snug">{ath.name}</h4>
+                      <p className="text-xs text-zinc-400 font-mono">CC: {ath.documentId}</p>
+                      {ath.phone && <p className="text-[11px] text-zinc-500">Cel: {ath.phone}</p>}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="p-3 rounded-xl bg-black/80 border border-zinc-800 space-y-1">
+                  <div className="flex justify-between items-center text-xs">
+                    <span className="text-zinc-400 font-medium">Plan Solicitado:</span>
+                    <span className="font-bold text-amber-400 px-2 py-0.5 rounded bg-amber-950/60 border border-amber-800/60">
+                      {ath.membership?.planName || 'Mensualidad'}
+                    </span>
+                  </div>
+                  {ath.membership?.paymentReportedAt && (
+                    <div className="flex justify-between items-center text-[11px] pt-1 border-t border-zinc-850">
+                      <span className="text-zinc-500">Fecha de Reporte:</span>
+                      <span className="text-zinc-300 font-mono">
+                        {new Date(ath.membership.paymentReportedAt).toLocaleString('es-CO', {
+                          day: '2-digit',
+                          month: 'short',
+                          hour: '2-digit',
+                          minute: '2-digit',
+                        })}
+                      </span>
+                    </div>
+                  )}
+                </div>
+
+                {/* Previsualización del Comprobante (Imagen Miniatura + Botón Lightbox) */}
+                <div className="space-y-2">
+                  {ath.membership?.receiptUrl ? (
+                    <div
+                      onClick={() => setReceiptModalAthlete(ath)}
+                      className="group relative cursor-pointer rounded-xl border border-amber-500/40 bg-black overflow-hidden h-36 flex items-center justify-center transition hover:border-amber-400"
+                    >
+                      <img
+                        src={ath.membership.receiptUrl}
+                        alt="Comprobante de pago"
+                        className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-300 opacity-90 group-hover:opacity-100"
+                      />
+                      <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 flex items-center justify-center transition">
+                        <span className="px-3 py-1.5 rounded-xl bg-black/80 border border-amber-500/60 text-amber-300 font-bold text-xs flex items-center gap-1.5 shadow-lg group-hover:scale-110 transition-transform">
+                          <ImageIcon className="w-4 h-4 text-amber-400" />
+                          <span>Ampliar Comprobante</span>
+                        </span>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="p-4 rounded-xl bg-zinc-950 border border-zinc-850 text-center text-xs text-zinc-500 italic">
+                      Sin foto adjunta (Registro directo)
+                    </div>
+                  )}
+                </div>
+
+                {/* Botón de Acción Principal */}
+                <div className="flex gap-2 pt-1">
+                  <button
+                    type="button"
+                    onClick={() => setReceiptModalAthlete(ath)}
+                    className="flex-1 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-black text-xs uppercase tracking-wider transition shadow-lg flex items-center justify-center gap-1.5 active:scale-95"
+                  >
+                    <Check className="w-4 h-4 stroke-[3]" />
+                    <span>Ver & Aprobar Pago</span>
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       )}
 
