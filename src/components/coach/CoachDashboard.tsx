@@ -1811,8 +1811,17 @@ const CoachSlotCard: React.FC<CoachSlotCardProps> = ({
   onCapacityChange,
   onViewAttendees,
 }) => {
+  const { updateSlot, deleteSlot } = useGym();
   const [isEditingCap, setIsEditingCap] = useState(false);
   const [tempCap, setTempCap] = useState(slot.capacity.toString());
+  
+  // Edit / Move Schedule State
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [editLabel, setEditLabel] = useState(slot.label);
+  const [editTime, setEditTime] = useState(slot.time);
+  const [editCoach, setEditCoach] = useState(slot.coachName || 'Coach');
+  const [editCap, setEditCap] = useState(slot.capacity.toString());
+  const [showConfirmDelete, setShowConfirmDelete] = useState(false);
 
   const handleSaveCap = () => {
     const num = parseInt(tempCap, 10);
@@ -1820,6 +1829,18 @@ const CoachSlotCard: React.FC<CoachSlotCardProps> = ({
       onCapacityChange(num);
     }
     setIsEditingCap(false);
+  };
+
+  const handleSaveSlotEdit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const capNum = parseInt(editCap, 10) || 15;
+    updateSlot(slot.id, {
+      label: editLabel.trim() || slot.label,
+      time: editTime.trim() || slot.time,
+      coachName: editCoach.trim() || 'Coach',
+      capacity: capNum,
+    });
+    setIsEditModalOpen(false);
   };
 
   return (
@@ -1831,7 +1852,7 @@ const CoachSlotCard: React.FC<CoachSlotCardProps> = ({
       }`}
     >
       <div className="flex items-center justify-between gap-2 mb-2">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-wrap">
           <span className="text-2xl font-black font-['Teko'] text-white tracking-wide">
             {slot.label}
           </span>
@@ -1840,18 +1861,40 @@ const CoachSlotCard: React.FC<CoachSlotCardProps> = ({
           </span>
         </div>
 
-        {/* Enable / Disable toggle */}
-        <button
-          type="button"
-          onClick={onToggle}
-          className={`flex items-center gap-1 text-[11px] font-bold px-2 py-0.5 rounded-lg transition ${
-            slot.isEnabled
-              ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
-              : 'bg-zinc-900 text-zinc-500 border border-zinc-800'
-          }`}
-        >
-          {slot.isEnabled ? 'Habilitada' : 'Deshabilitada'}
-        </button>
+        <div className="flex items-center gap-1.5">
+          {/* Mover Horario / Editar Slot */}
+          <button
+            type="button"
+            onClick={() => setIsEditModalOpen(true)}
+            className="p-1 rounded-lg bg-zinc-900 hover:bg-zinc-800 text-zinc-400 hover:text-white border border-zinc-800 transition"
+            title="Mover horario / Editar clase"
+          >
+            <Edit2 className="w-3.5 h-3.5" />
+          </button>
+
+          {/* Eliminar Clase */}
+          <button
+            type="button"
+            onClick={() => setShowConfirmDelete(true)}
+            className="p-1 rounded-lg bg-zinc-900 hover:bg-zinc-800 text-zinc-500 hover:text-red-400 border border-zinc-800 transition"
+            title="Eliminar clase"
+          >
+            <Trash2 className="w-3.5 h-3.5" />
+          </button>
+
+          {/* Enable / Disable toggle */}
+          <button
+            type="button"
+            onClick={onToggle}
+            className={`flex items-center gap-1 text-[11px] font-bold px-2 py-0.5 rounded-lg transition ${
+              slot.isEnabled
+                ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
+                : 'bg-zinc-900 text-zinc-500 border border-zinc-800'
+            }`}
+          >
+            {slot.isEnabled ? 'Habilitada' : 'Deshabilitada'}
+          </button>
+        </div>
       </div>
 
       {/* Capacity & Enrolled */}
@@ -1906,6 +1949,123 @@ const CoachSlotCard: React.FC<CoachSlotCardProps> = ({
           <ChevronRight className="w-3.5 h-3.5 text-zinc-400" />
         </button>
       </div>
+
+      {/* Modal Editar / Mover Horario de Clase */}
+      {isEditModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 backdrop-blur-sm p-4 animate-in fade-in select-none">
+          <div className="w-full max-w-sm rounded-2xl bg-zinc-950 border border-zinc-800 p-6 shadow-2xl relative text-zinc-100 space-y-4">
+            <button
+              type="button"
+              onClick={() => setIsEditModalOpen(false)}
+              className="absolute top-4 right-4 p-1 rounded-lg text-zinc-400 hover:text-white"
+            >
+              <X className="w-5 h-5" />
+            </button>
+            <h3 className="text-lg font-black text-white uppercase font-['Teko'] tracking-wider flex items-center gap-2">
+              <Clock className="w-5 h-5 text-red-500" />
+              Mover Horario / Editar Clase
+            </h3>
+            <form onSubmit={handleSaveSlotEdit} className="space-y-3.5 text-xs">
+              <div>
+                <label className="block text-zinc-400 font-bold mb-1">Nombre / Etiqueta del Horario</label>
+                <input
+                  type="text"
+                  required
+                  value={editLabel}
+                  onChange={(e) => setEditLabel(e.target.value)}
+                  placeholder="Ej: 6:00 AM - 7:00 AM"
+                  className="w-full rounded-xl bg-zinc-900 border border-zinc-700 p-2.5 text-white focus:outline-none focus:border-red-600"
+                />
+              </div>
+              <div>
+                <label className="block text-zinc-400 font-bold mb-1">Hora Exacta (24h)</label>
+                <input
+                  type="text"
+                  required
+                  value={editTime}
+                  onChange={(e) => setEditTime(e.target.value)}
+                  placeholder="Ej: 06:00"
+                  className="w-full rounded-xl bg-zinc-900 border border-zinc-700 p-2.5 text-white focus:outline-none focus:border-red-600"
+                />
+              </div>
+              <div>
+                <label className="block text-zinc-400 font-bold mb-1">Entrenador (Coach)</label>
+                <input
+                  type="text"
+                  value={editCoach}
+                  onChange={(e) => setEditCoach(e.target.value)}
+                  placeholder="Ej: Coach Camilo"
+                  className="w-full rounded-xl bg-zinc-900 border border-zinc-700 p-2.5 text-white focus:outline-none focus:border-red-600"
+                />
+              </div>
+              <div>
+                <label className="block text-zinc-400 font-bold mb-1">Cupo Máximo de Atletas</label>
+                <input
+                  type="number"
+                  min="1"
+                  max="50"
+                  value={editCap}
+                  onChange={(e) => setEditCap(e.target.value)}
+                  className="w-full rounded-xl bg-zinc-900 border border-zinc-700 p-2.5 text-white focus:outline-none focus:border-red-600"
+                />
+              </div>
+              <div className="flex gap-2 pt-2">
+                <button
+                  type="submit"
+                  className="flex-1 py-2.5 rounded-xl bg-red-800 hover:bg-red-700 text-white font-bold text-xs uppercase shadow-md border border-red-700/50"
+                >
+                  Guardar Cambios
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setIsEditModalOpen(false)}
+                  className="px-4 py-2.5 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-zinc-300 font-bold text-xs border border-zinc-800"
+                >
+                  Cancelar
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Modal Confirmación de Eliminación de Clase */}
+      {showConfirmDelete && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 backdrop-blur-sm p-4 animate-in fade-in select-none">
+          <div className="w-full max-w-sm rounded-2xl bg-zinc-950 border border-red-900/60 p-6 shadow-2xl space-y-4 text-center">
+            <div className="w-12 h-12 rounded-2xl bg-red-950/80 border border-red-700/60 flex items-center justify-center text-red-500 mx-auto">
+              <AlertTriangle className="w-6 h-6" />
+            </div>
+            <div>
+              <h3 className="text-lg font-black text-white uppercase font-['Teko'] tracking-wider">
+                ¿Eliminar Clase {slot.label}?
+              </h3>
+              <p className="text-xs text-zinc-400 mt-1">
+                Se eliminará este horario del día seleccionado.
+              </p>
+            </div>
+            <div className="flex gap-2 pt-2">
+              <button
+                type="button"
+                onClick={() => {
+                  deleteSlot(slot.id);
+                  setShowConfirmDelete(false);
+                }}
+                className="flex-1 py-2.5 rounded-xl bg-red-800 hover:bg-red-700 text-white font-bold text-xs uppercase shadow-md border border-red-700/50"
+              >
+                Sí, Eliminar Clase
+              </button>
+              <button
+                type="button"
+                onClick={() => setShowConfirmDelete(false)}
+                className="px-4 py-2.5 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-zinc-300 font-bold text-xs border border-zinc-800"
+              >
+                Cancelar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

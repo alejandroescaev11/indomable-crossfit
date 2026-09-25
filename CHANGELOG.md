@@ -23,6 +23,25 @@
 
 ---
 
+## 🚀 Versión 0.17.0 (2026-09-24) — Confirmación de RMs, Desaparición de Aprobados, Gestión de Clases y Bloqueos de Seguridad
+
+### ✨ Nuevas Funcionalidades & Mejoras
+1. **🗑️ Modal de Confirmación para Eliminar RMs (`RMCalculatorView.tsx`):**
+   - Ahora, al presionar la caneca de basura en cualquier RM registrado, se despliega un modal de confirmación explícito antes de borrar la marca permanentemente.
+2. **⚡ Filtrado de Atletas Aprobados (`AthleteManagementView.tsx`):**
+   - Se ajustó el filtro `pendingPaymentAthletes` para verificar estrictamente `isPendingApproval && !isActive`. Tan pronto como el Administrador activa la membresía de un atleta, este desaparece inmediatamente del bloque superior de comprobantes pendientes.
+3. **🗓️ Gestión de Horarios de Clases (`CoachDashboard.tsx`, `GymContext.tsx`, `firestoreService.ts`):**
+   - Se agregaron las funciones `updateSlot` y `deleteSlot` conectadas a Firestore.
+   - En las tarjetas de clase del entrenador/admin se incluyeron botones para **Editar / Mover Horario** (modificar etiqueta, hora 24h, entrenador y cupos) y **Eliminar Clase** con modal de confirmación.
+4. **🔒 Bloqueo para Usuarios Nuevos Sin Plan Aprobado (`App.tsx`):**
+   - Si un usuario se registra por primera vez y su membresía no ha sido aprobada por el administrador, se muestra un banner/bloqueo de activación y se restringe la navegación hacia funciones avanzadas.
+   - Se proporcionan botones de acción rápida para adjuntar el comprobante de pago o escribir al WhatsApp del gym.
+5. **⏳ Restricciones para Mensualidades Vencidas/Inactivas (`RMCalculatorView.tsx`, `WODTimerView.tsx`):**
+   - Si la membresía está vencida o inactiva, se deshabilita el botón **"+ Nuevo RM"** con un aviso flotante.
+   - En el **Temporizador Tabata / WOD Timer**, se bloquea la ejecución del reloj y se despliega una alerta de renovación requerida.
+
+---
+
 ## 🚀 Versión 0.16.9 (2026-09-24) — Optimización del Diseño Responsive de Comprobantes de Pago en Ordenadores
 
 ### 🎨 Diseño & UI

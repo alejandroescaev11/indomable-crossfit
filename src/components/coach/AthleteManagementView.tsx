@@ -127,7 +127,7 @@ export const AthleteManagementView: React.FC = () => {
   const [receiptModalAthlete, setReceiptModalAthlete] = useState<AthleteProfile | null>(null);
 
   const pendingPaymentAthletes = useMemo(() => {
-    return athletes.filter((a) => a?.membership?.isPendingApproval || a?.membership?.receiptUrl);
+    return athletes.filter((a) => Boolean(a?.membership?.isPendingApproval && !a?.membership?.isActive));
   }, [athletes]);
 
   const handleFormAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {

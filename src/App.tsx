@@ -52,8 +52,15 @@ const MainContent: React.FC = () => {
     gymSettings,
     logout,
     isPaymentModalOpen,
+    openPaymentModal,
     closePaymentModal,
   } = useGym();
+
+  const isUnapprovedAthlete = useMemo(() => {
+    if (role !== 'athlete') return false;
+    if (!currentAthlete?.membership) return true;
+    return Boolean(!currentAthlete.membership.planName || currentAthlete.membership.isPendingApproval || !currentAthlete.membership.isActive);
+  }, [currentAthlete, role]);
 
   const [isCheckInModalOpen, setIsCheckInModalOpen] = useState(false);
   const [isAdminTurnstileModalOpen, setIsAdminTurnstileModalOpen] = useState(false);
@@ -122,6 +129,10 @@ const MainContent: React.FC = () => {
   };
 
   const handleNavigateTab = (tab: string) => {
+    if (isUnapprovedAthlete && tab !== 'feed') {
+      openPaymentModal();
+      return;
+    }
     if (tab === 'wod-booking' || tab === 'booking' || tab === 'wod') {
       setAthleteTab('wod-booking');
     } else if (tab === 'rms') {
@@ -182,6 +193,52 @@ const MainContent: React.FC = () => {
         ) : (
           /* Athlete View */
           <div className="space-y-6">
+            {/* Banner de Bloqueo para Atletas Nuevos Sin Membresía Aprobada */}
+            {isUnapprovedAthlete && (
+              <div className="rounded-2xl border border-amber-500/50 bg-gradient-to-r from-amber-950/70 via-zinc-950 to-zinc-950 p-5 shadow-2xl space-y-4 animate-in fade-in">
+                <div className="flex items-start gap-3.5">
+                  <div className="w-11 h-11 rounded-xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400 shrink-0 shadow-md">
+                    <Lock className="w-6 h-6" />
+                  </div>
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-2">
+                      <h3 className="text-base sm:text-lg font-black text-white uppercase font-['Teko'] tracking-wider leading-none">
+                        ACTIVACIÓN DE MEMBRESÍA REQUERIDA
+                      </h3>
+                      <span className="px-2 py-0.5 rounded-full bg-amber-500 text-black font-black text-[10px] uppercase animate-pulse">
+                        Pendiente
+                      </span>
+                    </div>
+                    <p className="text-xs text-zinc-300 leading-relaxed">
+                      Hola <strong className="text-white">{currentAthlete?.name || 'Atleta'}</strong>. Tu cuenta está registrada, pero las funciones avanzadas (Reserva de Clases, Registro de RMs, Temporizador Tabata) requieren que el Administrador apruebe y active tu membresía.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex flex-col sm:flex-row items-center gap-2.5 pt-1 border-t border-amber-500/20">
+                  <button
+                    type="button"
+                    onClick={() => openPaymentModal()}
+                    className="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-black text-xs uppercase tracking-wider transition shadow-md flex items-center justify-center gap-2 active:scale-95"
+                  >
+                    <CreditCard className="w-4 h-4 stroke-[2.5]" />
+                    <span>Adjuntar Comprobante de Pago</span>
+                  </button>
+                  {gymSettings?.whatsappNumber && (
+                    <a
+                      href={`https://wa.me/${gymSettings.whatsappNumber.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(`Hola INDOMABLE CrossFit, acabo de registrarme con el nombre ${currentAthlete?.name || ''} (CC ${currentAthlete?.documentId || ''}) y deseo solicitar la activación de mi membresía.`)}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs uppercase tracking-wider transition shadow-md flex items-center justify-center gap-2 active:scale-95"
+                    >
+                      <MessageCircle className="w-4 h-4" />
+                      <span>Contactar WhatsApp Oficial</span>
+                    </a>
+                  )}
+                </div>
+              </div>
+            )}
+
             {/* Content per active Tab */}
             {athleteTab === 'feed' && (
               <WelcomeFeedView onNavigateTab={handleNavigateTab} />

@@ -85,7 +85,23 @@ export const RMCalculatorView: React.FC<{ initialExercise?: string }> = ({
     deleteRM,
     currentAthleteId,
     activeUnit,
+    currentAthlete,
+    role,
   } = useGym();
+
+  const isExpired = useMemo(() => {
+    if (!currentAthlete?.membership?.endDate) return false;
+    const today = new Date().toISOString().split('T')[0];
+    return currentAthlete.membership.endDate < today;
+  }, [currentAthlete]);
+
+  const isMembershipActive = useMemo(() => {
+    if (role === 'admin' || role === 'coach') return true;
+    return Boolean(currentAthlete?.membership?.isActive && !currentAthlete?.membership?.isPendingApproval && !isExpired);
+  }, [currentAthlete, isExpired, role]);
+
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [recordToDelete, setRecordToDelete] = useState<PersonalRecord | null>(null);
 
   const calculatorRef = useRef<HTMLDivElement>(null);
 
@@ -300,8 +316,18 @@ export const RMCalculatorView: React.FC<{ initialExercise?: string }> = ({
             {/* Botón Nuevo RM */}
             <button
               type="button"
-              onClick={() => handleOpenAddModal()}
-              className="flex items-center gap-1.5 rounded-xl bg-red-800 hover:bg-red-700 text-white px-4 py-2 text-xs font-extrabold shadow-md shadow-red-950/60 transition active:scale-95 border border-red-700/50"
+              onClick={() => {
+                if (!isMembershipActive) {
+                  setToastMessage('Tu mensualidad se encuentra vencida o inactiva. Renueva tu plan para registrar nuevos RMs.');
+                  return;
+                }
+                handleOpenAddModal();
+              }}
+              className={`flex items-center gap-1.5 rounded-xl px-4 py-2 text-xs font-extrabold shadow-md transition active:scale-95 border ${
+                isMembershipActive
+                  ? 'bg-red-800 hover:bg-red-700 text-white shadow-red-950/60 border-red-700/50'
+                  : 'bg-zinc-800 text-zinc-400 border-zinc-700 cursor-not-allowed'
+              }`}
             >
               <Plus className="w-4 h-4" />
               <span>Nuevo RM</span>
@@ -474,7 +500,10 @@ export const RMCalculatorView: React.FC<{ initialExercise?: string }> = ({
                               </button>
                               <button
                                 type="button"
-                                onClick={() => deleteRM(rec.id)}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setRecordToDelete(rec);
+                                }}
                                 className="p-1 rounded-lg hover:bg-zinc-800 text-zinc-500 hover:text-red-400 transition"
                                 title="Eliminar récord"
                               >
@@ -972,6 +1001,44 @@ export const RMCalculatorView: React.FC<{ initialExercise?: string }> = ({
           </div>
         </div>
       </div>
+
+      {/* Modal de Confirmación para Eliminar RM */}
+      {recordToDelete && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 backdrop-blur-sm p-4 animate-in fade-in select-none">
+          <div className="w-full max-w-sm rounded-2xl bg-zinc-950 border border-red-900/60 p-6 shadow-2xl space-y-4 text-center">
+            <div className="w-12 h-12 rounded-2xl bg-red-950/80 border border-red-700/60 flex items-center justify-center text-red-500 mx-auto">
+              <AlertTriangle className="w-6 h-6" />
+            </div>
+            <div>
+              <h3 className="text-lg font-black text-white uppercase font-['Teko'] tracking-wider">
+                ¿Eliminar RM de {recordToDelete.exerciseName}?
+              </h3>
+              <p className="text-xs text-zinc-400 mt-1">
+                Esta marca de <strong className="text-white">{recordToDelete.weight} {recordToDelete.unit || 'lbs'}</strong> será eliminada permanentemente de tu historial.
+              </p>
+            </div>
+            <div className="flex gap-2 pt-2">
+              <button
+                type="button"
+                onClick={() => {
+                  deleteRM(recordToDelete.id);
+                  setRecordToDelete(null);
+                }}
+                className="flex-1 py-2.5 rounded-xl bg-red-800 hover:bg-red-700 text-white font-bold text-xs uppercase transition shadow-lg border border-red-700/50 active:scale-95"
+              >
+                Sí, Eliminar
+              </button>
+              <button
+                type="button"
+                onClick={() => setRecordToDelete(null)}
+                className="px-4 py-2.5 rounded-xl bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-zinc-300 font-bold text-xs"
+              >
+                Cancelar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

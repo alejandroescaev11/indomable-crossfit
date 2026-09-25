@@ -63,6 +63,7 @@ import {
   syncBookSlot,
   syncCancelBooking,
   syncUpdateSlot,
+  syncDeleteSlot,
   syncSaveWod,
   syncSaveRM,
   syncDeleteRM,
@@ -196,6 +197,8 @@ interface GymContextType {
   markAttendance: (slotId: string, athleteId: string, attended: boolean) => void;
   generateWeekSchedule: (weekStartDate: string) => void;
   addNewSlot: (date: string, time: string, label: string, capacity: number, coachName: string) => void;
+  updateSlot: (slotId: string, updates: Partial<ClassSlot>) => void;
+  deleteSlot: (slotId: string) => void;
   
   // Personal Records (RM)
   rms: PersonalRecord[];
@@ -1306,6 +1309,18 @@ export const GymProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     };
     setSlots((prev) => [...prev, newSlot]);
     syncSaveSlot(newSlot).catch(() => {});
+  };
+
+  const updateSlot = (slotId: string, updates: Partial<ClassSlot>) => {
+    setSlots((prev) =>
+      prev.map((s) => (s.id === slotId ? ({ ...s, ...updates } as ClassSlot) : s))
+    );
+    syncUpdateSlot(slotId, updates).catch(() => {});
+  };
+
+  const deleteSlot = (slotId: string) => {
+    setSlots((prev) => prev.filter((s) => s.id !== slotId));
+    syncDeleteSlot(slotId).catch(() => {});
   };
 
   const generateWeekSchedule = (weekStartDate: string) => {
@@ -2676,6 +2691,8 @@ export const GymProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         markAttendance,
         generateWeekSchedule,
         addNewSlot,
+        updateSlot,
+        deleteSlot,
         rms,
         activeUnit,
         setActiveUnit,

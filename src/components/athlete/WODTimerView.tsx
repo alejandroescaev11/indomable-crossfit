@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
+import { useGym } from '../../context/GymContext';
 import {
   Play,
   Pause,
@@ -17,6 +18,8 @@ import {
   Info,
   Smartphone,
   Sparkles,
+  AlertTriangle,
+  Lock,
 } from 'lucide-react';
 
 export type TimerMode = 'tabata' | 'emom' | 'amrap' | 'fortime';
@@ -165,6 +168,18 @@ class SoundBeepSynthesizer {
 const soundManager = new SoundBeepSynthesizer();
 
 export const WODTimerView: React.FC = () => {
+  const { currentAthlete, role } = useGym();
+  const isExpired = useMemo(() => {
+    if (!currentAthlete?.membership?.endDate) return false;
+    const today = new Date().toISOString().split('T')[0];
+    return currentAthlete.membership.endDate < today;
+  }, [currentAthlete]);
+
+  const isMembershipActive = useMemo(() => {
+    if (role === 'admin' || role === 'coach') return true;
+    return Boolean(currentAthlete?.membership?.isActive && !currentAthlete?.membership?.isPendingApproval && !isExpired);
+  }, [currentAthlete, isExpired, role]);
+
   const [mode, setMode] = useState<TimerMode>('tabata');
   const [phase, setPhase] = useState<TimerPhase>('idle');
   const [isRunning, setIsRunning] = useState<boolean>(false);
@@ -265,6 +280,10 @@ export const WODTimerView: React.FC = () => {
 
   // Iniciar / Pausar
   const togglePlayPause = () => {
+    if (!isMembershipActive) {
+      alert('Tu mensualidad se encuentra vencida o inactiva. Por favor renueva tu plan para hacer uso del temporizador Tabata / WOD.');
+      return;
+    }
     soundManager.resume();
     if (!isRunning) {
       // Iniciar
@@ -575,6 +594,23 @@ export const WODTimerView: React.FC = () => {
 
   return (
     <div className="space-y-6 max-w-4xl mx-auto animate-in fade-in duration-300">
+      {!isMembershipActive && (
+        <div className="p-4 rounded-2xl bg-amber-950/80 border border-amber-600/70 text-amber-200 text-xs flex items-center justify-between gap-3 shadow-xl animate-in fade-in">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-amber-900/80 border border-amber-600/50 flex items-center justify-center text-amber-400 shrink-0">
+              <Lock className="w-5 h-5" />
+            </div>
+            <div>
+              <strong className="text-white text-sm block uppercase font-['Teko'] tracking-wider">
+                Temporizador Bloqueado por Membresía
+              </strong>
+              <p className="text-[11px] text-zinc-300">
+                Tu mensualidad se encuentra vencida o inactiva. Por favor renueva tu plan para utilizar el temporizador Tabata / WOD.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
       {/* Controles de Sonido y Pantalla Activa */}
       <div className="flex items-center justify-end gap-2 pt-1">
         {wakeLockActive && (

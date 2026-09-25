@@ -350,6 +350,13 @@ export const syncUpdateSlot = async (slotId: string, updates: Partial<ClassSlot>
   await updateDoc(docRef, cleanForFirestore(updates));
 };
 
+export const syncDeleteSlot = async (slotId: string): Promise<void> => {
+  const db = getFirebaseDb();
+  if (!db) return;
+  const docRef = doc(db, SLOTS_COL, slotId);
+  await deleteDoc(docRef);
+};
+
 export const syncSaveWod = async (wod: WODSchedule): Promise<void> => {
   const db = getFirebaseDb();
   if (!db) return;
