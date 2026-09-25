@@ -36,6 +36,7 @@ import {
   Sparkles,
   MessageCircle,
   ExternalLink,
+  Phone,
   Info,
 } from 'lucide-react';
 import {
@@ -97,8 +98,9 @@ export const CoachDashboard: React.FC = () => {
     }
   }, [role, activeCoachTab]);
 
-  // WhatsApp Community link state (Admin only)
+  // WhatsApp Community & Direct Contact state (Admin only)
   const [whatsappUrlInput, setWhatsappUrlInput] = useState(gymSettings?.whatsappGroupUrl || '');
+  const [directPhoneInput, setDirectPhoneInput] = useState(gymSettings?.nequiNumber || '');
   const [isSavingWhatsApp, setIsSavingWhatsApp] = useState(false);
   const [whatsappStatusMsg, setWhatsappStatusMsg] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
@@ -106,7 +108,10 @@ export const CoachDashboard: React.FC = () => {
     if (gymSettings?.whatsappGroupUrl !== undefined) {
       setWhatsappUrlInput(gymSettings.whatsappGroupUrl);
     }
-  }, [gymSettings?.whatsappGroupUrl]);
+    if (gymSettings?.nequiNumber !== undefined) {
+      setDirectPhoneInput(gymSettings.nequiNumber);
+    }
+  }, [gymSettings?.whatsappGroupUrl, gymSettings?.nequiNumber]);
 
   // Email notifications state
   const [sentEmails, setSentEmails] = useState<SentEmailRecord[]>(() => getSentEmailsHistory());
@@ -152,21 +157,26 @@ export const CoachDashboard: React.FC = () => {
     e.preventDefault();
     setWhatsappStatusMsg(null);
     const cleanUrl = whatsappUrlInput.trim();
+    const cleanPhone = directPhoneInput.trim();
 
     if (cleanUrl && !cleanUrl.startsWith('http://') && !cleanUrl.startsWith('https://')) {
       setWhatsappStatusMsg({
         type: 'error',
-        text: 'El enlace debe comenzar con https:// (por ejemplo: https://chat.whatsapp.com/...)',
+        text: 'El enlace del grupo debe comenzar con https:// (por ejemplo: https://chat.whatsapp.com/...)',
       });
       return;
     }
 
     setIsSavingWhatsApp(true);
     try {
-      await updateGymSettings({ whatsappGroupUrl: cleanUrl });
+      await updateGymSettings({
+        whatsappGroupUrl: cleanUrl,
+        nequiNumber: cleanPhone,
+        daviplataNumber: cleanPhone,
+      });
       setWhatsappStatusMsg({
         type: 'success',
-        text: cleanUrl ? '¡Enlace de WhatsApp actualizado con éxito!' : 'Enlace de WhatsApp desvinculado.',
+        text: '¡Configuración de WhatsApp y Atención al Cliente guardada con éxito!',
       });
       setTimeout(() => {
         setWhatsappStatusMsg(null);
@@ -174,7 +184,7 @@ export const CoachDashboard: React.FC = () => {
     } catch (err: any) {
       setWhatsappStatusMsg({
         type: 'error',
-        text: err?.message || 'Error al guardar el enlace de WhatsApp.',
+        text: err?.message || 'Error al guardar la configuración de WhatsApp.',
       });
     } finally {
       setIsSavingWhatsApp(false);
@@ -531,25 +541,36 @@ export const CoachDashboard: React.FC = () => {
                     <MessageCircle className="w-5 h-5" />
                   </div>
                   <div>
-                    <h3 className="font-extrabold text-sm text-white">Grupo Oficial de WhatsApp</h3>
-                    <p className="text-[11px] text-zinc-400">Comunidad de atletas & coaches</p>
+                    <h3 className="font-extrabold text-sm text-white">Canales & Contacto WhatsApp</h3>
+                    <p className="text-[11px] text-zinc-400">Grupo oficial & Línea directa de atención</p>
                   </div>
                 </div>
 
                 <div className="p-3 rounded-xl bg-zinc-900/80 border border-zinc-800 flex items-center justify-between gap-3">
                   <div>
-                    <span className="text-[10px] text-zinc-500 uppercase font-bold block">Estado Actual</span>
-                    {gymSettings?.whatsappGroupUrl ? (
-                      <span className="text-xs font-bold text-emerald-400 flex items-center gap-1.5 mt-0.5">
-                        <span className="h-2 w-2 rounded-full bg-emerald-500 inline-block animate-pulse" />
-                        Enlace Activo & Vinculado
-                      </span>
-                    ) : (
-                      <span className="text-xs font-bold text-amber-400 flex items-center gap-1.5 mt-0.5">
-                        <span className="h-2 w-2 rounded-full bg-amber-500 inline-block" />
-                        Sin Configurar
-                      </span>
-                    )}
+                    <span className="text-[10px] text-zinc-500 uppercase font-bold block">Estado Canales</span>
+                    <div className="flex flex-col gap-0.5 mt-0.5">
+                      {gymSettings?.whatsappGroupUrl ? (
+                        <span className="text-xs font-bold text-emerald-400 flex items-center gap-1.5">
+                          <span className="h-2 w-2 rounded-full bg-emerald-500 inline-block animate-pulse" />
+                          Grupo Activo
+                        </span>
+                      ) : (
+                        <span className="text-xs font-bold text-amber-400 flex items-center gap-1.5">
+                          <span className="h-2 w-2 rounded-full bg-amber-500 inline-block" />
+                          Grupo Sin Configurar
+                        </span>
+                      )}
+                      {gymSettings?.nequiNumber ? (
+                        <span className="text-[11px] text-zinc-400 font-mono">
+                          Línea: +57 {gymSettings.nequiNumber}
+                        </span>
+                      ) : (
+                        <span className="text-[11px] text-amber-400/80 font-mono">
+                          Línea no configurada
+                        </span>
+                      )}
+                    </div>
                   </div>
                   {gymSettings?.whatsappGroupUrl && (
                     <button
@@ -558,7 +579,7 @@ export const CoachDashboard: React.FC = () => {
                       className="px-2.5 py-1.5 rounded-lg bg-emerald-950/60 hover:bg-emerald-900/80 text-emerald-300 border border-emerald-800/80 text-[11px] font-bold flex items-center gap-1 transition"
                       title="Abrir enlace actual en WhatsApp"
                     >
-                      <span>Abrir Grupo</span>
+                      <span>Probar Grupo</span>
                       <ExternalLink className="w-3 h-3" />
                     </button>
                   )}
@@ -584,7 +605,7 @@ export const CoachDashboard: React.FC = () => {
                 <form onSubmit={handleSaveWhatsApp} className="space-y-3 text-xs">
                   <div>
                     <label className="block font-bold text-zinc-300 mb-1">
-                      URL de Invitación de WhatsApp
+                      URL de Invitación al Grupo (Comunidad)
                     </label>
                     <div className="relative">
                       <input
@@ -596,8 +617,24 @@ export const CoachDashboard: React.FC = () => {
                       />
                       <MessageCircle className="w-4 h-4 text-zinc-500 absolute left-3 top-3 pointer-events-none" />
                     </div>
+                  </div>
+
+                  <div>
+                    <label className="block font-bold text-zinc-300 mb-1">
+                      Número Celular Directo (Atención & Nequi/Daviplata)
+                    </label>
+                    <div className="relative">
+                      <input
+                        type="tel"
+                        value={directPhoneInput}
+                        onChange={(e) => setDirectPhoneInput(e.target.value)}
+                        placeholder="Ej: 3001234567"
+                        className="w-full rounded-xl border border-zinc-800 bg-zinc-900 p-2.5 pl-9 text-white text-xs focus:border-emerald-500 focus:outline-none placeholder:text-zinc-600 font-mono"
+                      />
+                      <Phone className="w-4 h-4 text-zinc-500 absolute left-3 top-3 pointer-events-none" />
+                    </div>
                     <p className="text-[10px] text-zinc-500 mt-1">
-                      Copia el enlace desde WhatsApp: <span className="text-zinc-400 font-mono">Info del Grupo → Enlace de invitación</span>.
+                      Este número se usará para el botón flotante "Escribir al Gimnasio" y para transferencias.
                     </p>
                   </div>
 
@@ -615,7 +652,7 @@ export const CoachDashboard: React.FC = () => {
                       ) : (
                         <>
                           <Check className="w-4 h-4" />
-                          <span>Guardar Enlace WhatsApp</span>
+                          <span>Guardar Configuración WhatsApp</span>
                         </>
                       )}
                     </button>
@@ -634,7 +671,7 @@ export const CoachDashboard: React.FC = () => {
                 </form>
 
                 <p className="text-[11px] text-zinc-500 leading-relaxed pt-2 border-t border-zinc-850">
-                  📲 Este enlace se muestra a los atletas en la pantalla principal (Bienvenida & Novedades) para que con un solo toque se unan al grupo oficial de la comunidad.
+                  📲 Las opciones de WhatsApp están disponibles desde el menú flotante en la esquina inferior derecha para todos los usuarios.
                 </p>
               </div>
             </div>

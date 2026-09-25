@@ -68,6 +68,18 @@ El sistema maneja 4 tipos de sesión, todos gestionados por `GymContext`:
 
 ## 📅 HISTORIAL DE CAMBIOS
 
+### v0.16.3 — 2026-09-24
+**Rama/Commit:** `fix/admin-whatsapp-config-and-dynamic-button-offset`
+
+#### ✨ Cambios
+- **[CoachDashboard.tsx]**:
+  - Añadida tarjeta de configuración unificada en el Panel de Administrador (pestaña Información) para gestionar tanto el **Enlace del Grupo de WhatsApp** como la **Línea Celular Directa de WhatsApp/Atención/Nequi**.
+  - Sincronización en tiempo real con `gymSettings` (`whatsappGroupUrl` y `nequiNumber`).
+- **[App.tsx]**:
+  - Posicionamiento dinámico inteligente del botón flotante de WhatsApp (`#btn-floating-whatsapp`):
+    - Se ubica a `bottom-[7.5rem] sm:bottom-20` cuando hay botón flotante inferior presente (Atleta en pestaña Inicio o Administrador con botón de torniquete).
+    - Se ubica a `bottom-[4.25rem] sm:bottom-6` cuando no hay botón inferior presente (Atleta en Reservas, RMs, Resultados o Perfil).
+
 ### v0.16.2 — 2026-09-24
 **Rama/Commit:** `fix/whatsapp-modal-dual-config-and-cleanup`
 

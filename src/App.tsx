@@ -431,7 +431,9 @@ const MainContent: React.FC = () => {
 
       {/* Floating WhatsApp Button (Disponible para todos los usuarios) */}
       {isAuthenticated && (
-        <div className="fixed bottom-[7.5rem] sm:bottom-20 right-3.5 sm:right-6 z-40">
+        <div
+          className={`fixed ${(role === 'athlete' && athleteTab === 'feed') || role === 'admin' ? 'bottom-[7.5rem] sm:bottom-20' : 'bottom-[4.25rem] sm:bottom-6'} right-3.5 sm:right-6 z-40 transition-all duration-300`}
+        >
           {showWhatsAppMenu && (
             <div className="absolute bottom-13 right-0 w-64 rounded-2xl border border-emerald-800/80 bg-zinc-950 p-3 shadow-2xl z-50 text-zinc-200 space-y-2 animate-in fade-in slide-in-from-bottom-2">
               <div className="flex items-center justify-between pb-2 border-b border-zinc-850">
