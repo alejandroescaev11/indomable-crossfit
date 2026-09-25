@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { GymProvider, useGym } from './context/GymContext';
 import { Header } from './components/common/Header';
 import { OfflineIndicator } from './components/common/OfflineIndicator';

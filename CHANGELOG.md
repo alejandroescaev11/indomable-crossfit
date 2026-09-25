@@ -23,6 +23,14 @@
 
 ---
 
+## 🚀 Versión 0.17.1 (2026-09-24) — Corregido ReferenceError: useMemo is not defined en App.tsx
+
+### 🐛 Corregido
+- **`App.tsx`**: Se añadió la importación faltante de `useMemo` desde la librería `'react'`. Al no estar declarada en la cabecera del archivo, la llamada `useMemo()` producía un error de ejecución JavaScript (`ReferenceError: useMemo is not defined`) que hacía colapsar el árbol de React en el navegador.
+- **Deploy a Producción**: Compilado y desplegado el parche a Firebase Hosting.
+
+---
+
 ## 🚀 Versión 0.17.0 (2026-09-24) — Confirmación de RMs, Desaparición de Aprobados, Gestión de Clases y Bloqueos de Seguridad
 
 ### ✨ Nuevas Funcionalidades & Mejoras
