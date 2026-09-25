@@ -414,42 +414,69 @@ export const Header: React.FC = () => {
                         )}
                       </div>
 
-                      {/* Membership Details */}
-                      <div className="mt-2.5 pt-2 border-t border-zinc-850/80 bg-zinc-900/60 p-2 rounded-xl text-[11px] space-y-1">
-                        <div className="flex justify-between items-center text-zinc-400">
-                          <span>Plan actual:</span>
-                          <span className="font-bold text-white truncate max-w-[130px]">
-                            {currentAthlete?.membership?.planName}
-                          </span>
+                      {/* Membership Details & Prominent Days Remaining */}
+                      <div className="mt-2.5 pt-2 border-t border-zinc-850/80 space-y-2">
+                        <div className="bg-zinc-900/90 border border-zinc-800 p-2.5 rounded-xl text-[11px] space-y-1.5">
+                          <div className="flex justify-between items-center text-zinc-400">
+                            <span>Plan actual:</span>
+                            <span className="font-bold text-white truncate max-w-[140px]">
+                              {currentAthlete?.membership?.planName || 'Plan General'}
+                            </span>
+                          </div>
+                          <div className="flex justify-between items-center text-zinc-400">
+                            <span>Vigencia:</span>
+                            <span className="text-zinc-300 font-mono text-[10px]">
+                              {currentAthlete?.membership?.isPendingApproval
+                                ? 'Pendiente de activación'
+                                : `Hasta ${currentAthlete?.membership?.endDate}`}
+                            </span>
+                          </div>
+                          {typeof currentAthlete?.membership?.remainingClasses === 'number' && currentAthlete?.membership?.remainingClasses !== null && !currentAthlete?.membership?.isPendingApproval && (
+                            <div className="flex justify-between items-center text-zinc-400">
+                              <span>Clases disponibles:</span>
+                              <span className="font-bold text-red-400 font-mono">
+                                {currentAthlete?.membership?.remainingClasses} de {currentAthlete?.membership?.totalClasses || 12}
+                              </span>
+                            </div>
+                          )}
                         </div>
-                        <div className="flex justify-between items-center text-zinc-400">
-                          <span>Vigencia:</span>
-                          <span className="text-zinc-300">
-                            {currentAthlete?.membership?.isPendingApproval
-                              ? 'Pendiente de activación'
-                              : `Hasta ${currentAthlete?.membership?.endDate}`}
-                          </span>
-                        </div>
+
+                        {/* Prominent Highlighting for DÍAS RESTANTES */}
                         {currentAthlete?.membership?.endDate && !currentAthlete?.membership?.isPendingApproval && (() => {
                           const daysRemaining = calculateMembershipDaysRemaining(currentAthlete.membership.endDate);
                           const daysInfo = formatMembershipDaysRemaining(daysRemaining);
+                          const isNearExpiry = daysRemaining !== null && daysRemaining <= 3 && daysRemaining >= 0;
+                          const isExpired = daysRemaining !== null && daysRemaining < 0;
+
                           return (
-                            <div className="flex justify-between items-center text-zinc-400">
-                              <span>Días restantes:</span>
-                              <span className={`px-2 py-0.5 rounded-md text-[10px] font-bold border ${daysInfo.badgeClass}`}>
-                                {daysInfo.text}
-                              </span>
+                            <div className={`p-2.5 rounded-xl border flex items-center justify-between gap-2 shadow-inner ${
+                              isExpired
+                                ? 'bg-red-950/60 border-red-800/80 text-red-300'
+                                : isNearExpiry
+                                ? 'bg-amber-950/60 border-amber-800/80 text-amber-300'
+                                : 'bg-emerald-950/60 border-emerald-800/80 text-emerald-300'
+                            }`}>
+                              <div>
+                                <span className="text-[10px] font-black uppercase tracking-wider block opacity-90">
+                                  Días Restantes de Membresía
+                                </span>
+                                <span className="text-xs font-semibold block text-zinc-200">
+                                  {daysInfo.text}
+                                </span>
+                              </div>
+                              <div className="text-right">
+                                <span className={`text-2xl font-black font-['Teko'] leading-none ${
+                                  isExpired ? 'text-red-400' : isNearExpiry ? 'text-amber-400' : 'text-emerald-400'
+                                }`}>
+                                  {daysRemaining !== null ? Math.max(0, daysRemaining) : '--'}
+                                </span>
+                                <span className="text-[9px] uppercase tracking-wider block text-zinc-400">
+                                  DÍAS
+                                </span>
+                              </div>
                             </div>
                           );
                         })()}
-                        {typeof currentAthlete?.membership?.remainingClasses === 'number' && currentAthlete?.membership?.remainingClasses !== null && !currentAthlete?.membership?.isPendingApproval && (
-                          <div className="flex justify-between items-center text-zinc-400">
-                            <span>Clases disponibles:</span>
-                            <span className="font-bold text-red-400">
-                              {currentAthlete?.membership?.remainingClasses} de {currentAthlete?.membership?.totalClasses || 12}
-                            </span>
-                          </div>
-                        )}
                       </div>
                     </div>
 
@@ -462,13 +489,13 @@ export const Header: React.FC = () => {
                           setShowAthleteMenu(false);
                           openPaymentModal();
                         }}
-                        className="w-full flex items-center justify-between px-3 py-2.5 rounded-xl bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white font-black text-xs uppercase tracking-wider transition shadow-md shadow-red-950/40 active:scale-95 cursor-pointer"
+                        className="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl bg-red-800 hover:bg-red-700 text-white font-black text-xs uppercase tracking-wider transition shadow-lg shadow-red-950/50 border border-red-700/50 active:scale-95 cursor-pointer"
                       >
                         <div className="flex items-center gap-2">
                           <CreditCard className="w-4 h-4 text-white" />
                           <span>Renovar / Pagar Plan</span>
                         </div>
-                        <span className="text-[10px] px-1.5 py-0.5 rounded bg-black/30 font-mono text-zinc-200">
+                        <span className="text-[10px] px-1.5 py-0.5 rounded bg-black/40 font-mono text-zinc-200 border border-zinc-700">
                           Transferencia
                         </span>
                       </button>

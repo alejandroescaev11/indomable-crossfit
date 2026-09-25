@@ -33,6 +33,7 @@ import {
   CreditCard,
   Home,
   DoorOpen,
+  MessageCircle,
 } from 'lucide-react';
 
 type AthleteTab = 'feed' | 'wod-booking' | 'rms' | 'logs' | 'anthropometry' | 'timer';
@@ -56,6 +57,7 @@ const MainContent: React.FC = () => {
 
   const [isCheckInModalOpen, setIsCheckInModalOpen] = useState(false);
   const [isAdminTurnstileModalOpen, setIsAdminTurnstileModalOpen] = useState(false);
+  const [showWhatsAppMenu, setShowWhatsAppMenu] = useState(false);
 
   const [athleteTab, setAthleteTab] = useState<AthleteTab>('feed');
   const [rmExercisePreset, setRmExercisePreset] = useState<string | undefined>(undefined);
@@ -427,6 +429,85 @@ const MainContent: React.FC = () => {
         </div>
       </nav>
 
+      {/* Floating WhatsApp Button for Athlete (Ubicar encima del botón de Ingreso al Box) */}
+      {role === 'athlete' && athleteTab === 'feed' && (
+        <div className="fixed bottom-[7.5rem] sm:bottom-20 right-3.5 sm:right-6 z-40">
+          {showWhatsAppMenu && (
+            <div className="absolute bottom-13 right-0 w-64 rounded-2xl border border-emerald-800/80 bg-zinc-950 p-3 shadow-2xl z-50 text-zinc-200 space-y-2 animate-in fade-in slide-in-from-bottom-2">
+              <div className="flex items-center justify-between pb-2 border-b border-zinc-850">
+                <div className="flex items-center gap-2 text-emerald-400 font-bold text-xs">
+                  <MessageCircle className="w-4 h-4 fill-current" />
+                  <span>Opciones WhatsApp</span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setShowWhatsAppMenu(false)}
+                  className="text-zinc-500 hover:text-white text-xs px-1"
+                >
+                  ✕
+                </button>
+              </div>
+
+              {/* Opción 1: Ir al grupo de WhatsApp del Box */}
+              <button
+                type="button"
+                onClick={() => {
+                  setShowWhatsAppMenu(false);
+                  const url = gymSettings?.whatsappGroupUrl?.trim();
+                  if (url) {
+                    window.open(url, '_blank', 'noopener,noreferrer');
+                  } else {
+                    alert('El enlace al grupo de WhatsApp del gimnasio no ha sido configurado aún.');
+                  }
+                }}
+                className="w-full flex items-center gap-2.5 p-2 rounded-xl bg-zinc-900 hover:bg-zinc-850 border border-zinc-800 text-left text-xs font-bold text-white transition active:scale-95 cursor-pointer"
+              >
+                <div className="h-8 w-8 rounded-lg bg-emerald-600/20 border border-emerald-600/30 flex items-center justify-center text-emerald-400 shrink-0 text-base">
+                  👥
+                </div>
+                <div>
+                  <div className="font-bold text-zinc-100">Grupo del Gimnasio</div>
+                  <div className="text-[10px] text-zinc-400 font-normal">Unirse a la comunidad en WhatsApp</div>
+                </div>
+              </button>
+
+              {/* Opción 2: Escribir directamente al número del Box */}
+              <button
+                type="button"
+                onClick={() => {
+                  setShowWhatsAppMenu(false);
+                  const phone = gymSettings?.nequiNumber || gymSettings?.daviplataNumber || '3001234567';
+                  const cleanPhone = phone.replace(/\D/g, '');
+                  const waUrl = cleanPhone
+                    ? `https://wa.me/57${cleanPhone}?text=${encodeURIComponent('¡Hola INDOMABLE! Quisiera información o ayuda.')}`
+                    : 'https://wa.me/';
+                  window.open(waUrl, '_blank', 'noopener,noreferrer');
+                }}
+                className="w-full flex items-center gap-2.5 p-2 rounded-xl bg-zinc-900 hover:bg-zinc-850 border border-zinc-800 text-left text-xs font-bold text-white transition active:scale-95 cursor-pointer"
+              >
+                <div className="h-8 w-8 rounded-lg bg-emerald-600/20 border border-emerald-600/30 flex items-center justify-center text-emerald-400 shrink-0 text-base">
+                  💬
+                </div>
+                <div>
+                  <div className="font-bold text-zinc-100">Escribir al Gimnasio</div>
+                  <div className="text-[10px] text-zinc-400 font-normal">Mensaje directo al número oficial</div>
+                </div>
+              </button>
+            </div>
+          )}
+
+          <button
+            type="button"
+            id="btn-floating-whatsapp"
+            onClick={() => setShowWhatsAppMenu(!showWhatsAppMenu)}
+            title="Opciones de WhatsApp del Box"
+            className="flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-full bg-emerald-600 hover:bg-emerald-500 text-white shadow-2xl shadow-emerald-950/80 border border-emerald-400/50 active:scale-95 transition-all"
+          >
+            <MessageCircle className="w-5 h-5 fill-current" />
+          </button>
+        </div>
+      )}
+
       {/* Floating Check-in / Torniquete Button for Athlete (Solo en Menú Inicio) */}
       {role === 'athlete' && athleteTab === 'feed' && (
         <button
@@ -434,7 +515,7 @@ const MainContent: React.FC = () => {
           id="btn-floating-checkin"
           onClick={() => setIsCheckInModalOpen(true)}
           title="Marcar ingreso al Box (Torniquete)"
-          className="fixed bottom-[4.25rem] sm:bottom-6 right-3.5 sm:right-6 z-40 flex items-center gap-2 px-3.5 sm:px-4 py-2.5 sm:py-3 rounded-2xl bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white font-black text-xs uppercase tracking-wider shadow-2xl shadow-red-950/80 border border-red-500/50 active:scale-95 transition-all"
+          className="fixed bottom-[4.25rem] sm:bottom-6 right-3.5 sm:right-6 z-40 flex items-center gap-2 px-3.5 sm:px-4 py-2.5 sm:py-3 rounded-2xl bg-red-800 hover:bg-red-700 text-white font-black text-xs uppercase tracking-wider shadow-2xl shadow-red-950/80 border border-red-700/50 active:scale-95 transition-all"
         >
           <div className="relative">
             <DoorOpen className="w-4 h-4 sm:w-5 sm:h-5 text-white animate-pulse" />

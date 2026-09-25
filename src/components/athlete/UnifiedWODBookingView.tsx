@@ -789,7 +789,7 @@ export const UnifiedWODBookingView: React.FC<UnifiedWODBookingViewProps> = ({
               <button
                 type="button"
                 onClick={handleConfirmCancel}
-                className="px-4 py-2 rounded-xl bg-red-600 hover:bg-red-500 text-white text-xs font-bold transition-colors shadow-lg shadow-red-950/50"
+                className="px-4 py-2 rounded-xl bg-red-800 hover:bg-red-700 border border-red-700/50 text-white text-xs font-bold transition-colors shadow-lg shadow-red-950/50"
               >
                 Sí, Cancelar
               </button>
@@ -906,7 +906,7 @@ export const UnifiedWODBookingView: React.FC<UnifiedWODBookingViewProps> = ({
                       handleBook(selectedSlotForAttendees.id);
                       setSelectedSlotForAttendees(null);
                     }}
-                    className="px-4 py-2 rounded-xl bg-red-600 hover:bg-red-500 text-xs font-extrabold text-white transition shadow-lg shadow-red-950/50"
+                    className="px-4 py-2 rounded-xl bg-red-800 hover:bg-red-700 border border-red-700/50 text-xs font-extrabold text-white transition shadow-lg shadow-red-950/50"
                   >
                     Reservar este Cupo
                   </button>

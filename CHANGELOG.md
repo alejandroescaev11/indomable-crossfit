@@ -68,6 +68,26 @@ El sistema maneja 4 tipos de sesión, todos gestionados por `GymContext`:
 
 ## 📅 HISTORIAL DE CAMBIOS
 
+### v0.16.0 — 2026-09-24
+**Rama/Commit:** `feat/floating-whatsapp-menu-header-days-remaining-and-mobile-ui-optimization`
+
+#### ✨ Cambios
+- **[WelcomeFeedView.tsx]**:
+  - Eliminada la tarjeta gigante de encabezado con nombre y membresía para no saturar la pantalla de inicio en celulares.
+  - Reemplazada por un encabezado compacto y limpio centrado en Novedades y Comunidad.
+- **[Header.tsx]**:
+  - Trasladada la información del atleta, plan y vigencia al menú desplegable superior derecho.
+  - Añadido un contenedor de alto contraste para **"Días Restantes de Membresía"** con badge de estado y contador numérico en grande (`text-2xl font-black`).
+  - Actualizado el botón "Renovar / Pagar Plan" al tono rojo carmesí tenue (`bg-red-800 hover:bg-red-700 border-red-700/50`).
+- **[App.tsx]**:
+  - Creado un **botón flotante con el logo oficial de WhatsApp** ubicado estratégicamente encima del botón de "Ingreso al Box".
+  - Al hacer clic abre un menú popover con 2 opciones:
+    1. 👥 **Grupo del Gimnasio**: Redirige al canal/grupo oficial del Box.
+    2. 💬 **Escribir al Gimnasio**: Abre chat directo de WhatsApp al número del Box.
+  - Actualizado el botón flotante de "Ingreso al Box" al tono carmesí tenue.
+- **[WODResultsLogView.tsx, UnifiedWODBookingView.tsx]**:
+  - Homogeneizados los botones de acción restantes al carmesí tenue sobrio.
+
 ### v0.15.1 — 2026-09-24
 **Rama/Commit:** `fix/email-templates-copywriting-update`
 
