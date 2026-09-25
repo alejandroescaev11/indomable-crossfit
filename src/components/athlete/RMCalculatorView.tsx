@@ -20,7 +20,8 @@ import {
   Calculator,
   Flame,
   Activity,
-  ArrowLeftRight
+  ArrowLeftRight,
+  AlertTriangle,
 } from 'lucide-react';
 
 // Conversión matemática bidireccional LBS <-> KG

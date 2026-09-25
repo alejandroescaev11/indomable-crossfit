@@ -23,6 +23,15 @@
 
 ---
 
+## 🚀 Versión 0.17.2 (2026-09-24) — Protección Robustecida OneSignal SDK y Verificación de Caché
+
+### 🐛 Corregido
+- **`oneSignalService.ts`**: Se agregaron guardas estrictas de validación (`!ONESIGNAL_APP_ID?.trim()`) en todas las funciones del SDK (`initOneSignal`, `identifyUserInOneSignal`, `logoutOneSignal`, `promptOneSignalPushPermission`, `isOneSignalPushSupported`). Esto previene el error `TypeError: Cannot read properties of undefined (reading 'Qe')` cuando el App ID de OneSignal no está configurado o cuando el SDK se ejecuta en entornos de previsualización sin credenciales.
+- **Protección de `OneSignal.login`**: Se envolvió la ejecución de `OneSignal.login(userId)` dentro de un bloque `try...catch` aislado para evitar excepciones no capturadas a nivel de ventana.
+- **Cache Invalidation & Deploy**: Compilado nuevo paquete de producción (`index-BY2jCnrE.js`) y desplegado a Firebase Hosting (`https://app-crossfit-c66a5.web.app`).
+
+---
+
 ## 🚀 Versión 0.17.1 (2026-09-24) — Corregido ReferenceError: useMemo is not defined en App.tsx
 
 ### 🐛 Corregido

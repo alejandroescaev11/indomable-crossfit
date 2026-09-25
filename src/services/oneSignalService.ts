@@ -19,20 +19,22 @@ let isInitialized = false;
  * Inicializa OneSignal en el navegador / PWA
  */
 export function initOneSignal(): void {
-  if (typeof window === 'undefined' || isInitialized) return;
+  if (typeof window === 'undefined' || isInitialized || !ONESIGNAL_APP_ID?.trim()) return;
 
   window.OneSignalDeferred = window.OneSignalDeferred || [];
   window.OneSignalDeferred.push(async (OneSignal: any) => {
     try {
-      await OneSignal.init({
-        appId: ONESIGNAL_APP_ID,
-        allowLocalhostAsSecureOrigin: true,
-        notifyButton: {
-          enable: false, // Usamos nuestra propia UI para no superponer botones flotantes
-        },
-      });
-      isInitialized = true;
-      console.log('[OneSignal] Inicializado exitosamente con App ID:', ONESIGNAL_APP_ID);
+      if (OneSignal?.init) {
+        await OneSignal.init({
+          appId: ONESIGNAL_APP_ID.trim(),
+          allowLocalhostAsSecureOrigin: true,
+          notifyButton: {
+            enable: false, // Usamos nuestra propia UI para no superponer botones flotantes
+          },
+        });
+        isInitialized = true;
+        console.log('[OneSignal] Inicializado exitosamente con App ID:', ONESIGNAL_APP_ID);
+      }
     } catch (err) {
       console.warn('[OneSignal] Error durante la inicialización:', err);
     }
@@ -43,14 +45,23 @@ export function initOneSignal(): void {
  * Vincula el usuario autenticado con OneSignal y activa la suscripción push
  */
 export function identifyUserInOneSignal(userId: string, role: string): void {
-  if (typeof window === 'undefined') return;
+  if (typeof window === 'undefined' || !ONESIGNAL_APP_ID?.trim()) return;
+  if (!userId || typeof userId !== 'string' || !userId.trim()) return;
 
   window.OneSignalDeferred = window.OneSignalDeferred || [];
   window.OneSignalDeferred.push(async (OneSignal: any) => {
     try {
-      await OneSignal.login(userId);
-      await OneSignal.User.addTag('role', role);
-      await OneSignal.User.addTag('isAuthenticated', 'true');
+      if (OneSignal && typeof OneSignal.login === 'function') {
+        try {
+          await OneSignal.login(userId.trim());
+        } catch (loginErr) {
+          console.warn('[OneSignal] Advertencia durante login SDK:', loginErr);
+        }
+      }
+      if (OneSignal?.User?.addTag) {
+        await OneSignal.User.addTag('role', role);
+        await OneSignal.User.addTag('isAuthenticated', 'true');
+      }
       if ('Notification' in window && Notification.permission === 'granted') {
         await OneSignal.User?.PushSubscription?.optIn?.();
       }
@@ -65,7 +76,7 @@ export function identifyUserInOneSignal(userId: string, role: string): void {
  * Cierra la sesión en OneSignal y desactiva las notificaciones push en este dispositivo
  */
 export function logoutOneSignal(): void {
-  if (typeof window === 'undefined') return;
+  if (typeof window === 'undefined' || !ONESIGNAL_APP_ID?.trim()) return;
 
   window.OneSignalDeferred = window.OneSignalDeferred || [];
   window.OneSignalDeferred.push(async (OneSignal: any) => {
@@ -73,7 +84,13 @@ export function logoutOneSignal(): void {
       await OneSignal.User?.PushSubscription?.optOut?.();
       await OneSignal.User?.addTag?.('isAuthenticated', 'false');
       await OneSignal.User?.removeTag?.('role');
-      await OneSignal.logout?.();
+      if (typeof OneSignal.logout === 'function') {
+        try {
+          await OneSignal.logout();
+        } catch {
+          // Ignore logout error if not logged in
+        }
+      }
       console.log('[OneSignal] Sesión cerrada y notificaciones push desactivadas en OneSignal');
     } catch (err) {
       console.warn('[OneSignal] Error durante logout de OneSignal:', err);
@@ -85,7 +102,7 @@ export function logoutOneSignal(): void {
  * Solicita permisos de notificación Push en OneSignal y suscribe al atleta
  */
 export async function promptOneSignalPushPermission(): Promise<boolean> {
-  if (typeof window === 'undefined') return false;
+  if (typeof window === 'undefined' || !ONESIGNAL_APP_ID?.trim()) return false;
 
   return new Promise((resolve) => {
     window.OneSignalDeferred = window.OneSignalDeferred || [];
@@ -112,7 +129,7 @@ export async function promptOneSignalPushPermission(): Promise<boolean> {
  * Obtiene el estado de permiso en OneSignal
  */
 export async function isOneSignalPushSupported(): Promise<boolean> {
-  if (typeof window === 'undefined') return false;
+  if (typeof window === 'undefined' || !ONESIGNAL_APP_ID?.trim()) return false;
 
   return new Promise((resolve) => {
     window.OneSignalDeferred = window.OneSignalDeferred || [];

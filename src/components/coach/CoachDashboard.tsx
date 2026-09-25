@@ -28,6 +28,8 @@ import {
   Send,
   Lock,
   AlertCircle,
+  AlertTriangle,
+  Edit2,
   CheckCircle2,
   Settings,
   Trash2,

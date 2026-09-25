@@ -2444,9 +2444,9 @@ export const AthleteManagementView: React.FC = () => {
             <div className="p-3 rounded-xl bg-zinc-900/90 border border-zinc-800 space-y-1">
               <div className="flex justify-between text-xs">
                 <span className="text-zinc-400 font-semibold">Plan Solicitado:</span>
-                <span className="font-bold text-amber-400">{receiptModalAthlete.membership.planName}</span>
+                <span className="font-bold text-amber-400">{receiptModalAthlete?.membership?.planName || 'Mensualidad'}</span>
               </div>
-              {receiptModalAthlete.membership.paymentReportedAt && (
+              {receiptModalAthlete?.membership?.paymentReportedAt && (
                 <div className="flex justify-between text-[11px]">
                   <span className="text-zinc-500">Fecha del Reporte:</span>
                   <span className="text-zinc-300 font-mono">
@@ -2458,7 +2458,7 @@ export const AthleteManagementView: React.FC = () => {
 
             {/* Vista Previa del Comprobante */}
             <div className="rounded-2xl border border-zinc-800 bg-black p-2 flex items-center justify-center overflow-hidden max-h-96">
-              {receiptModalAthlete.membership.receiptUrl ? (
+              {receiptModalAthlete?.membership?.receiptUrl ? (
                 <img
                   src={receiptModalAthlete.membership.receiptUrl}
                   alt="Comprobante de pago"
