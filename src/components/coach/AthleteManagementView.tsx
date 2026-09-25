@@ -34,6 +34,8 @@ import {
   Upload,
   User,
   Tag,
+  CreditCard,
+  Image as ImageIcon,
 } from 'lucide-react';
 import { sendMembershipActivatedEmail } from '../../services/emailService';
 import { PlanManagementModal } from './PlanManagementModal';
@@ -117,11 +119,12 @@ export const AthleteManagementView: React.FC = () => {
   const [editTotalClasses, setEditTotalClasses] = useState('');
   const [editDiscipline, setEditDiscipline] = useState<AthleteDiscipline>('crossfit');
   const [isSubmittingRenew, setIsSubmittingRenew] = useState(false);
-  const [actionToast, setActionToast] = useState<{
-    type: 'success' | 'warning' | 'error' | 'info';
-    text: string;
-  } | null>(null);
   const [editIsActive, setEditIsActive] = useState(true);
+  const [receiptModalAthlete, setReceiptModalAthlete] = useState<AthleteProfile | null>(null);
+
+  const pendingPaymentAthletes = useMemo(() => {
+    return athletes.filter((a) => a.membership.isPendingApproval || a.membership.receiptUrl);
+  }, [athletes]);
 
   const handleFormAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -1193,6 +1196,16 @@ export const AthleteManagementView: React.FC = () => {
 
               {/* Action Buttons in Dark Crimson & Carbon Theme */}
               <div className="flex items-center gap-1.5 shrink-0 flex-wrap justify-end">
+                {ath.membership.receiptUrl && (
+                  <button
+                    onClick={() => setReceiptModalAthlete(ath)}
+                    title="Ver comprobante de pago adjunto por el atleta"
+                    className="flex items-center gap-1 rounded-xl bg-amber-950/80 hover:bg-amber-900 border border-amber-600/60 text-amber-300 px-2.5 py-1.5 text-xs font-bold transition shadow-sm"
+                  >
+                    <ImageIcon className="w-3.5 h-3.5 text-amber-400" />
+                    <span>Comprobante</span>
+                  </button>
+                )}
                 {role === 'admin' ? (
                   ath.membership.isPendingApproval ? (
                     <button
@@ -2338,7 +2351,85 @@ export const AthleteManagementView: React.FC = () => {
         </div>
       )}
 
-      {/* Modal 6: Plan & Pricing Management */}
+      {/* Modal 6: Lightbox de Comprobante de Pago */}
+      {receiptModalAthlete && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-md p-4 animate-in fade-in select-none">
+          <div className="relative w-full max-w-lg rounded-3xl bg-zinc-950 border border-zinc-800 p-5 sm:p-6 shadow-2xl text-zinc-100 space-y-4 max-h-[92dvh] overflow-y-auto">
+            <div className="flex items-center justify-between pb-3 border-b border-zinc-850">
+              <div className="flex items-center gap-2.5">
+                <AthleteAvatar athlete={receiptModalAthlete} size="sm" />
+                <div>
+                  <h4 className="font-extrabold text-sm text-white">Comprobante de Pago Adjunto</h4>
+                  <p className="text-[11px] text-zinc-400">
+                    {receiptModalAthlete.name} • CC {receiptModalAthlete.documentId}
+                  </p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setReceiptModalAthlete(null)}
+                className="p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-850 transition"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="p-3 rounded-xl bg-zinc-900/90 border border-zinc-800 space-y-1">
+              <div className="flex justify-between text-xs">
+                <span className="text-zinc-400 font-semibold">Plan Solicitado:</span>
+                <span className="font-bold text-amber-400">{receiptModalAthlete.membership.planName}</span>
+              </div>
+              {receiptModalAthlete.membership.paymentReportedAt && (
+                <div className="flex justify-between text-[11px]">
+                  <span className="text-zinc-500">Fecha del Reporte:</span>
+                  <span className="text-zinc-300 font-mono">
+                    {new Date(receiptModalAthlete.membership.paymentReportedAt).toLocaleString('es-CO')}
+                  </span>
+                </div>
+              )}
+            </div>
+
+            {/* Vista Previa del Comprobante */}
+            <div className="rounded-2xl border border-zinc-800 bg-black p-2 flex items-center justify-center overflow-hidden max-h-96">
+              {receiptModalAthlete.membership.receiptUrl ? (
+                <img
+                  src={receiptModalAthlete.membership.receiptUrl}
+                  alt="Comprobante de pago"
+                  className="max-h-96 w-auto object-contain rounded-xl shadow-lg"
+                />
+              ) : (
+                <div className="p-8 text-center text-zinc-500 text-xs">No hay captura adjunta</div>
+              )}
+            </div>
+
+            <div className="flex gap-2 pt-2 border-t border-zinc-850">
+              {role === 'admin' && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    const target = receiptModalAthlete;
+                    setReceiptModalAthlete(null);
+                    handleOpenRenewModal(target);
+                  }}
+                  className="flex-1 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-black text-xs uppercase tracking-wider transition shadow-lg flex items-center justify-center gap-1.5"
+                >
+                  <Check className="w-4 h-4 stroke-[3]" />
+                  <span>Aprobar Pago & Activar</span>
+                </button>
+              )}
+              <button
+                type="button"
+                onClick={() => setReceiptModalAthlete(null)}
+                className="px-4 py-2.5 rounded-xl bg-zinc-900 hover:bg-zinc-850 text-zinc-300 font-bold text-xs border border-zinc-800"
+              >
+                Cerrar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal 7: Plan & Pricing Management */}
       <PlanManagementModal
         isOpen={isPlanModalOpen}
         onClose={() => setIsPlanModalOpen(false)}

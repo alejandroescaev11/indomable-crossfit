@@ -68,6 +68,20 @@ El sistema maneja 4 tipos de sesión, todos gestionados por `GymContext`:
 
 ## 📅 HISTORIAL DE CAMBIOS
 
+### v0.16.4 — 2026-09-24
+**Rama/Commit:** `feat/payment-receipt-lightbox-and-rm-module-unification`
+
+#### ✨ Cambios
+- **[PaymentModal.tsx & AthleteManagementView.tsx]**:
+  - Al adjuntar y enviar comprobante de pago, la imagen se guarda en el perfil del atleta (`membership.receiptUrl` y `membership.paymentReportedAt`) y genera un registro en la auditoría del sistema.
+  - En el Panel de Administrador se añadió la sección **"Comprobantes de Pago Pendientes por Verificar"**, permitiendo abrir un modal lightbox para inspeccionar la foto del comprobante en alta resolución y aprobar la membresía inmediatamente.
+  - En la tabla de atletas se añadió el botón directo **"Comprobante"** para revisar la foto del recibo desde cualquier fila.
+- **[RMCalculatorView.tsx]**:
+  - Eliminado el botón redundante "Nuevo Ejercicio". El modal de **"+ Nuevo RM"** permite seleccionar ejercicios existentes o escribir/crear uno nuevo en el momento.
+  - La pantalla y la calculadora de porcentajes se unificaron en función del ejercicio seleccionado.
+  - Al hacer clic en cualquier fila de la tabla de RMs, el ejercicio seleccionado se destaca visualmente y la pantalla (calculadora, desglose de discos, repeticiones teóricas y tabla referencial) se actualiza de forma síncrona.
+  - El selector de ejercicios de la calculadora se organiza dando prioridad a los RMs ya registrados por el atleta.
+
 ### v0.16.3 — 2026-09-24
 **Rama/Commit:** `fix/admin-whatsapp-config-and-dynamic-button-offset`
 

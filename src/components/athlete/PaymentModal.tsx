@@ -30,6 +30,7 @@ interface PaymentModalProps {
 export const PaymentModal: React.FC<PaymentModalProps> = ({ isOpen, onClose }) => {
   const {
     currentAthlete,
+    updateAthlete,
     plans,
     gymSettings,
     addActivityLog,
@@ -83,11 +84,22 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({ isOpen, onClose }) =
 
     setIsSubmitting(true);
     try {
+      // Guardar el comprobante y actualizar estado pendiente en la membresía del atleta
+      await updateAthlete(currentAthlete.id, {
+        membership: {
+          ...currentAthlete.membership,
+          planName: selectedPlan?.name || currentAthlete.membership.planName,
+          isPendingApproval: true,
+          receiptUrl: receiptImage,
+          paymentReportedAt: new Date().toISOString(),
+        },
+      });
+
       // Registrar log de auditoría para que el admin lo vea de inmediato
       addActivityLog({
         category: 'MEMBERSHIP',
         action: 'Reporte de Pago Atleta',
-        description: `El atleta ${currentAthlete.name} (CC ${currentAthlete.documentId}) reportó comprobante de pago para el plan "${selectedPlan?.name || 'Membresía'}" por ${formatCOP(selectedPlan?.price || 0)}.`,
+        description: `El atleta ${currentAthlete.name} (CC ${currentAthlete.documentId}) adjuntó comprobante de pago para el plan "${selectedPlan?.name || 'Membresía'}" por ${formatCOP(selectedPlan?.price || 0)}.`,
         actor: currentAthlete.name,
         target: currentAthlete.documentId,
       });

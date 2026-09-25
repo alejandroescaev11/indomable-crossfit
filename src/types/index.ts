@@ -38,6 +38,8 @@ export interface AthleteProfile {
     endDate: string; // YYYY-MM-DD
     isActive: boolean;
     isPendingApproval?: boolean;
+    receiptUrl?: string;
+    paymentReportedAt?: string;
   };
 }
 
