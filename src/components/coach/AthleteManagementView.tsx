@@ -119,6 +119,10 @@ export const AthleteManagementView: React.FC = () => {
   const [editTotalClasses, setEditTotalClasses] = useState('');
   const [editDiscipline, setEditDiscipline] = useState<AthleteDiscipline>('crossfit');
   const [isSubmittingRenew, setIsSubmittingRenew] = useState(false);
+  const [actionToast, setActionToast] = useState<{
+    type: 'success' | 'warning' | 'error' | 'info';
+    text: string;
+  } | null>(null);
   const [editIsActive, setEditIsActive] = useState(true);
   const [receiptModalAthlete, setReceiptModalAthlete] = useState<AthleteProfile | null>(null);
 

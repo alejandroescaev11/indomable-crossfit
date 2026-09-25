@@ -68,6 +68,13 @@ El sistema maneja 4 tipos de sesión, todos gestionados por `GymContext`:
 
 ## 📅 HISTORIAL DE CAMBIOS
 
+### v0.16.7 — 2026-09-24
+**Rama/Commit:** `fix/restore-actiontoast-state-in-athlete-management`
+
+#### ✨ Cambios
+- **[AthleteManagementView.tsx]**:
+  - Restablecida la declaración del estado `actionToast` (`const [actionToast, setActionToast] = useState(...)`). Resuelto en forma definitiva el error de runtime `Uncaught ReferenceError: actionToast is not defined`.
+
 ### v0.16.6 — 2026-09-24
 **Rama/Commit:** `fix/error-boundary-and-complete-null-safety`
 
