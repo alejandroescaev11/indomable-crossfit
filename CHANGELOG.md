@@ -68,6 +68,15 @@ El sistema maneja 4 tipos de sesión, todos gestionados por `GymContext`:
 
 ## 📅 HISTORIAL DE CAMBIOS
 
+### v0.16.6 — 2026-09-24
+**Rama/Commit:** `fix/error-boundary-and-complete-null-safety`
+
+#### ✨ Cambios
+- **[ErrorBoundary.tsx & main.tsx]**:
+  - Creado e integrado un componente **ErrorBoundary** en la raíz de la aplicación para capturar de forma preventiva cualquier excepción de JavaScript sin que la pantalla se vuelva negra. Si ocurre un fallo crítico, la app muestra un panel elegante de recuperación con botón de recarga.
+- **[AthleteManagementView.tsx]**:
+  - Aplicada protección de nulos exhaustiva (`ath?.membership?.endDate`, `ath?.membership?.planName`, `ath?.membership?.isActive`) en el renderizado individual de tarjetas de la lista de atletas.
+
 ### v0.16.5 — 2026-09-24
 **Rama/Commit:** `fix/admin-panel-null-safety-and-custom-rm-input`
 

@@ -1043,14 +1043,15 @@ export const AthleteManagementView: React.FC = () => {
           const today = new Date();
           today.setHours(0, 0, 0, 0);
           const todayStr = new Date().toISOString().split('T')[0];
-          const isDateExpired = Boolean(ath.membership.endDate && ath.membership.endDate < todayStr);
-          const [endYear, endMonth, endDay] = (ath.membership.endDate || todayStr).split('-').map(Number);
+          const endDateStr = ath.membership?.endDate || todayStr;
+          const isDateExpired = Boolean(ath.membership?.endDate && ath.membership.endDate < todayStr);
+          const [endYear, endMonth, endDay] = endDateStr.split('-').map(Number);
           const endDate = new Date(endYear, (endMonth || 1) - 1, endDay || 1, 23, 59, 59);
           const diffTime = endDate.getTime() - today.getTime();
           const diffDays = Math.max(0, Math.ceil(diffTime / (1000 * 60 * 60 * 24)));
-          const remCls = typeof ath.membership.remainingClasses === 'number' ? ath.membership.remainingClasses : null;
+          const remCls = typeof ath.membership?.remainingClasses === 'number' ? ath.membership.remainingClasses : null;
           const hasPunch = remCls !== null;
-          const isExpired = !ath.membership.isActive || isDateExpired || (hasPunch && remCls <= 0);
+          const isExpired = !ath.membership?.isActive || isDateExpired || (hasPunch && remCls <= 0);
           const isExpiring = !isExpired && (diffDays <= 4 || (hasPunch && remCls <= 2));
 
           // Count reservations booked by this athlete in all loaded slots
@@ -1145,8 +1146,8 @@ export const AthleteManagementView: React.FC = () => {
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs bg-zinc-900/70 p-3 rounded-xl border border-zinc-800/80 min-w-[280px]">
                 <div>
                   <span className="text-[10px] text-zinc-500 uppercase font-bold block">Plan</span>
-                  <span className="font-semibold text-zinc-200 truncate block">{ath.membership.planName}</span>
-                  {typeof ath.membership.remainingClasses === 'number' && ath.membership.remainingClasses !== null && (
+                  <span className="font-semibold text-zinc-200 truncate block">{ath.membership?.planName || 'Sin Plan'}</span>
+                  {typeof ath.membership?.remainingClasses === 'number' && ath.membership.remainingClasses !== null && (
                     <span className="text-[10px] font-bold text-red-400">
                       {ath.membership.remainingClasses} de {ath.membership.totalClasses || 16} clases
                     </span>
@@ -1156,7 +1157,7 @@ export const AthleteManagementView: React.FC = () => {
                 <div>
                   <span className="text-[10px] text-zinc-500 uppercase font-bold block">Vencimiento</span>
                   <span className={`font-semibold ${isExpired ? 'text-red-400' : isExpiring ? 'text-amber-400' : 'text-zinc-300'}`}>
-                    {ath.membership.endDate}
+                    {ath.membership?.endDate || '—'}
                   </span>
                   <span className="text-[10px] text-zinc-500 block">
                     {isExpired
@@ -1167,7 +1168,7 @@ export const AthleteManagementView: React.FC = () => {
 
                 <div>
                   <span className="text-[10px] text-zinc-500 uppercase font-bold block">Estado</span>
-                  {ath.membership.isPendingApproval ? (
+                  {ath.membership?.isPendingApproval ? (
                     <span className="inline-flex items-center gap-1 rounded bg-amber-950/80 px-2 py-0.5 text-[10px] font-black text-amber-300 border border-amber-800/60 animate-pulse">
                       <Clock className="w-3 h-3" />
                       Por Activar
@@ -1196,7 +1197,7 @@ export const AthleteManagementView: React.FC = () => {
 
               {/* Action Buttons in Dark Crimson & Carbon Theme */}
               <div className="flex items-center gap-1.5 shrink-0 flex-wrap justify-end">
-                {ath.membership.receiptUrl && (
+                {ath.membership?.receiptUrl && (
                   <button
                     onClick={() => setReceiptModalAthlete(ath)}
                     title="Ver comprobante de pago adjunto por el atleta"
@@ -1207,7 +1208,7 @@ export const AthleteManagementView: React.FC = () => {
                   </button>
                 )}
                 {role === 'admin' ? (
-                  ath.membership.isPendingApproval ? (
+                  ath.membership?.isPendingApproval ? (
                     <button
                       onClick={() => handleOpenRenewModal(ath)}
                       title="Aprobar registro y activar mensualidad tras validar pago"
@@ -1227,7 +1228,7 @@ export const AthleteManagementView: React.FC = () => {
                     </button>
                   )
                 ) : (
-                  ath.membership.isPendingApproval ? (
+                  ath.membership?.isPendingApproval ? (
                     <div
                       className="flex items-center gap-1 rounded-xl bg-amber-950/40 border border-amber-800/60 text-amber-400 px-2.5 py-1.5 text-xs font-semibold"
                       title="Solo el Administrador tiene autorización para aprobar y activar membresías"
