@@ -68,6 +68,16 @@ El sistema maneja 4 tipos de sesión, todos gestionados por `GymContext`:
 
 ## 📅 HISTORIAL DE CAMBIOS
 
+### v0.16.2 — 2026-09-24
+**Rama/Commit:** `fix/whatsapp-modal-dual-config-and-cleanup`
+
+#### ✨ Cambios
+- **[WelcomeFeedView.tsx]**:
+  - Modal de configuración de WhatsApp extendido para Administradores: permite guardar simultáneamente el enlace de la comunidad (`whatsappGroupUrl`) y el número de celular de atención directa (`nequiNumber`).
+  - Removidos completamente todos los letreros estáticos duplicados de WhatsApp en el feed.
+- **[App.tsx]**:
+  - Botón flotante de WhatsApp activo globalmente para todos los usuarios autenticados.
+
 ### v0.16.1 — 2026-09-24
 **Rama/Commit:** `fix/global-floating-whatsapp-and-novedades-header-enhancement`
 

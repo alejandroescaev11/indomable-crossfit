@@ -823,10 +823,10 @@ export const WelcomeFeedView: React.FC<WelcomeFeedViewProps> = ({ onNavigateTab,
         </div>
       )}
 
-      {/* Modal Configurar Enlace de WhatsApp (Solo Admin) */}
+      {/* Modal Configurar WhatsApp (Grupo + Número Directo) (Solo Admin) */}
       {isAdmin && isEditingWhatsApp && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fadeIn">
-          <div className="relative w-full max-w-md bg-zinc-900 border border-zinc-800 rounded-2xl p-6 shadow-2xl">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-fadeIn">
+          <div className="relative w-full max-w-md bg-zinc-950 border border-zinc-800 rounded-2xl p-6 shadow-2xl space-y-4">
             <button
               type="button"
               onClick={() => setIsEditingWhatsApp(false)}
@@ -835,55 +835,94 @@ export const WelcomeFeedView: React.FC<WelcomeFeedViewProps> = ({ onNavigateTab,
               <X className="w-5 h-5" />
             </button>
 
-            <div className="flex items-center gap-2.5 mb-3">
+            <div className="flex items-center gap-2.5">
               <div className="w-9 h-9 rounded-xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400">
                 <MessageCircle className="w-5 h-5" />
               </div>
-              <h3 className="text-base font-black text-white uppercase tracking-wider font-teko text-xl">
-                Configurar Grupo de WhatsApp
-              </h3>
+              <div>
+                <h3 className="text-lg font-black text-white uppercase tracking-wider font-['Teko'] leading-none">
+                  Configurar WhatsApp del Box
+                </h3>
+                <p className="text-xs text-zinc-400 mt-0.5">Grupo oficial y número directo</p>
+              </div>
             </div>
 
-            <p className="text-xs text-zinc-400 mb-4 leading-relaxed">
-              Ingresa el enlace de invitación al grupo de WhatsApp oficial de INDOMABLE (debe comenzar por <span className="text-emerald-400 font-mono">https://chat.whatsapp.com/</span>). Todos los atletas podrán unirse con un solo toque desde la pantalla de Inicio.
-            </p>
-
-            <form onSubmit={handleSaveWhatsApp} className="space-y-4">
+            <form
+              onSubmit={async (e) => {
+                e.preventDefault();
+                if (role !== 'admin') return;
+                setIsSavingWhatsApp(true);
+                try {
+                  await updateGymSettings({
+                    whatsappGroupUrl: whatsappInput.trim(),
+                    nequiNumber: (e.currentTarget.elements.namedItem('directPhone') as HTMLInputElement)?.value.trim() || gymSettings?.nequiNumber,
+                  });
+                  setWhatsappSuccessMsg('¡Datos de WhatsApp guardados con éxito!');
+                  setTimeout(() => {
+                    setIsEditingWhatsApp(false);
+                    setWhatsappSuccessMsg('');
+                  }, 1400);
+                } catch (err) {
+                  console.error('Error guardando datos de WhatsApp:', err);
+                } finally {
+                  setIsSavingWhatsApp(false);
+                }
+              }}
+              className="space-y-3.5"
+            >
               <div>
-                <label className="block text-xs font-semibold text-zinc-300 uppercase tracking-wider mb-1">
-                  Enlace de Invitación de WhatsApp *
+                <label className="block text-xs font-bold text-zinc-300 uppercase tracking-wider mb-1">
+                  1. Enlace del Grupo de WhatsApp (Comunidad)
                 </label>
                 <input
                   type="url"
-                  required
                   placeholder="https://chat.whatsapp.com/..."
                   value={whatsappInput}
                   onChange={(e) => setWhatsappInput(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-zinc-950 border border-zinc-800 text-white placeholder-zinc-500 text-xs focus:outline-none focus:border-emerald-500 font-mono"
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-zinc-900 border border-zinc-800 text-white placeholder-zinc-500 text-xs focus:outline-none focus:border-emerald-500 font-mono"
                 />
+                <span className="text-[10px] text-zinc-500 mt-1 block">
+                  Link de invitación al grupo del Box.
+                </span>
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-zinc-300 uppercase tracking-wider mb-1">
+                  2. Número de Celular Directo del Box (WhatsApp)
+                </label>
+                <input
+                  type="text"
+                  name="directPhone"
+                  defaultValue={gymSettings?.nequiNumber || '3001234567'}
+                  placeholder="Ej: 3001234567"
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-zinc-900 border border-zinc-800 text-white placeholder-zinc-500 text-xs focus:outline-none focus:border-emerald-500 font-mono"
+                />
+                <span className="text-[10px] text-zinc-500 mt-1 block">
+                  Número de 10 dígitos para chat directo con la administración.
+                </span>
               </div>
 
               {whatsappSuccessMsg && (
-                <div className="p-3 rounded-xl bg-emerald-950/50 border border-emerald-800/60 text-emerald-400 text-xs font-medium flex items-center gap-2 animate-fadeIn">
-                  <CheckCircle2 className="w-4 h-4 shrink-0" />
+                <div className="p-3 rounded-xl bg-emerald-950/60 border border-emerald-800/60 text-emerald-300 text-xs font-medium flex items-center gap-2 animate-fadeIn">
+                  <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-400" />
                   <span>{whatsappSuccessMsg}</span>
                 </div>
               )}
 
-              <div className="flex items-center justify-end gap-2.5 pt-2 border-t border-zinc-800">
+              <div className="flex items-center justify-end gap-2.5 pt-2 border-t border-zinc-850">
                 <button
                   type="button"
                   onClick={() => setIsEditingWhatsApp(false)}
-                  className="px-4 py-2 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-xs font-bold text-zinc-300 transition"
+                  className="px-4 py-2 rounded-xl bg-zinc-900 hover:bg-zinc-850 text-xs font-bold text-zinc-400 hover:text-white transition"
                 >
                   Cancelar
                 </button>
                 <button
                   type="submit"
                   disabled={isSavingWhatsApp}
-                  className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold uppercase tracking-wider transition shadow-md shadow-emerald-950/60 disabled:opacity-50"
+                  className="px-5 py-2 rounded-xl bg-emerald-800 hover:bg-emerald-700 text-white text-xs font-bold uppercase tracking-wider transition shadow-md shadow-emerald-950/60 disabled:opacity-50"
                 >
-                  {isSavingWhatsApp ? 'Guardando...' : 'Guardar Enlace'}
+                  {isSavingWhatsApp ? 'Guardando...' : 'Guardar Cambios'}
                 </button>
               </div>
             </form>
