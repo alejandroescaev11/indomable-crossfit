@@ -80,7 +80,7 @@ export const MaintenanceView: React.FC<MaintenanceViewProps> = ({ customMessage 
             INDOMABLE
           </h1>
           <span className="text-[10px] uppercase font-bold tracking-widest text-red-500">
-            CrossFit & Performance Box
+            Gimnasio
           </span>
         </div>
       </div>

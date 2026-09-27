@@ -41,6 +41,18 @@ export interface AthleteProfile {
     receiptUrl?: string;
     paymentReportedAt?: string;
   };
+  additionalMemberships?: {
+    planName: string;
+    discipline?: AthleteDiscipline;
+    totalClasses?: number | null;
+    remainingClasses?: number | null;
+    startDate: string;
+    endDate: string;
+    isActive: boolean;
+    isPendingApproval?: boolean;
+    receiptUrl?: string;
+    paymentReportedAt?: string;
+  }[];
 }
 
 export interface WODSchedule {

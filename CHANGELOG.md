@@ -23,6 +23,28 @@
 
 ---
 
+## 🚀 Versión 0.18.0 (2026-09-27) — Esquema Torniquete, Selector KG/LB, N-RM Flexible, Planes & Métodos de Pago (Bancolombia/Efectivo) y Renovación Inteligente
+
+### ✨ Nuevas Funcionalidades & Mejoras
+1. **🔌 Esquema Gráfico y Guía de Ensamble del Torniquete:**
+   - Se generaron los artefactos técnicos `implementation_plan_v18.md` y `turnstile_installation_guide.md` con diagramas de conexión para el módulo Wi-Fi de 12V (Shelly 1 / Tuya), clemas de señal `D23/GND` y solenoides azules.
+2. **🏋️ Calculadora de RMs N-RM & Selector KG / LBS (`RMCalculatorView.tsx`):**
+   - Se integró un selector directo de unidades `[ KG ] / [ LBS ]` tanto en la barra superior como en el panel inferior.
+   - Soporte para repeticiones libres $N$-RM (1RM, 3RM, 5RM, 8RM, 10RM...).
+   - Cálculo automático de 1RM Estimado usando la fórmula Epley: $\text{1RM Estimado} = \text{Peso} \times (1 + \frac{N}{30})$.
+   - Visualización clara en la tarjeta de cálculo del peso registrado y su equivalente a 1RM para porcentajes del WOD.
+3. **💳 Filtrado de Métodos de Pago (Bancolombia & Efectivo):**
+   - Se actualizaron las pantallas de reporte y aprobación de pago (`PaymentModal.tsx`) para presentar exclusivamente **Transferencia (Bancolombia)** y **Efectivo**, removiendo canales innecesarios.
+4. **⏳ Renovación Inteligente con Respeto de Días Válidos & Mini Historial (`AthleteManagementView.tsx`):**
+   - Si una mensualidad activa se renueva antes de su fecha de vencimiento (`endDate >= hoy`), el sistema respeta los días restantes y programa el nuevo período para iniciar al día siguiente (`endDate + 1 día`).
+   - Se añadió un **Mini Historial de las Últimas 3 Mensualidades / Pagos** dentro del modal de renovación del atleta.
+5. **🏷️ Ajuste de Branding & Terminología (`Header.tsx`, `MaintenanceView.tsx`):**
+   - Se actualizó el subtítulo institucional a **"Gimnasio"** / **"INDOMABLE"**.
+6. **👥 Estructura para Múltiples Membresías Activas (`types/index.ts`):**
+   - Se extendió la interfaz del atleta con el campo `additionalMemberships` para dar soporte a múltiples planes concurrentes.
+
+---
+
 ## 🚀 Versión 0.17.2 (2026-09-24) — Protección Robustecida OneSignal SDK y Verificación de Caché
 
 ### 🐛 Corregido

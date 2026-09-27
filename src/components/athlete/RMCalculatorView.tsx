@@ -86,6 +86,7 @@ export const RMCalculatorView: React.FC<{ initialExercise?: string }> = ({
     deleteRM,
     currentAthleteId,
     activeUnit,
+    setActiveUnit,
     currentAthlete,
     role,
   } = useGym();
@@ -164,13 +165,19 @@ export const RMCalculatorView: React.FC<{ initialExercise?: string }> = ({
     );
   }, [athleteRMs, selectedExerciseName]);
 
-  // Base 1RM weight used for calculation (converts automatically to activeUnit)
+  // Base 1RM weight used for calculation (converts automatically to activeUnit, and estimates 1RM for N-RM)
   const effective1RM = useMemo(() => {
     if (customWeightInput && !isNaN(Number(customWeightInput)) && Number(customWeightInput) > 0) {
       return Number(customWeightInput);
     }
     if (currentRecord) {
-      return convertWeight(currentRecord.weight, currentRecord.unit || 'lbs', activeUnit);
+      const converted = convertWeight(currentRecord.weight, currentRecord.unit || 'lbs', activeUnit);
+      const reps = currentRecord.reps || 1;
+      if (reps > 1) {
+        // Fórmula Epley: 1RM Estimado = Peso * (1 + Reps / 30)
+        return Math.round(converted * (1 + reps / 30) * 10) / 10;
+      }
+      return converted;
     }
     return activeUnit === 'kg' ? 60 : 135; // fallback base
   }, [customWeightInput, currentRecord, activeUnit]);
@@ -314,6 +321,32 @@ export const RMCalculatorView: React.FC<{ initialExercise?: string }> = ({
           </div>
 
           <div className="flex flex-wrap items-center gap-2">
+            {/* Unit Switcher */}
+            <div className="flex items-center rounded-xl bg-zinc-900 border border-zinc-800 p-1">
+              <button
+                type="button"
+                onClick={() => setActiveUnit('kg')}
+                className={`px-3 py-1 rounded-lg text-xs font-black transition ${
+                  activeUnit === 'kg'
+                    ? 'bg-red-800 text-white border border-red-700/60 shadow-md'
+                    : 'text-zinc-400 hover:text-white'
+                }`}
+              >
+                KG
+              </button>
+              <button
+                type="button"
+                onClick={() => setActiveUnit('lbs')}
+                className={`px-3 py-1 rounded-lg text-xs font-black transition ${
+                  activeUnit === 'lbs'
+                    ? 'bg-red-800 text-white border border-red-700/60 shadow-md'
+                    : 'text-zinc-400 hover:text-white'
+                }`}
+              >
+                LBS
+              </button>
+            </div>
+
             {/* Botón Nuevo RM */}
             <button
               type="button"
@@ -611,13 +644,13 @@ export const RMCalculatorView: React.FC<{ initialExercise?: string }> = ({
               )}
             </div>
 
-            {/* Display Base 1RM con Conversión Activa */}
-            <div className="rounded-xl bg-black/80 p-3.5 border border-zinc-800">
+            {/* Display Base RM con Conversión Activa y 1RM Estimado */}
+            <div className="rounded-xl bg-black/80 p-3.5 border border-zinc-800 space-y-2">
               <div className="flex justify-between items-center mb-1">
-                <span className="text-xs text-zinc-400 font-medium">1RM Registrado:</span>
+                <span className="text-xs text-zinc-400 font-medium">Marca Registrada:</span>
                 {currentRecord ? (
                   <span className="text-xs font-bold text-red-400 bg-red-600/20 border border-red-600/30 px-2 py-0.5 rounded">
-                    {currentRecord.date}
+                    {currentRecord.reps || 1}RM • {currentRecord.date}
                   </span>
                 ) : (
                   <span className="text-[10px] text-zinc-500">Sin récord registrado</span>
@@ -631,12 +664,21 @@ export const RMCalculatorView: React.FC<{ initialExercise?: string }> = ({
                     : '--'}
                 </span>
                 <span className="text-sm font-bold text-zinc-400">{activeUnit}</span>
-                {currentRecord && (currentRecord.unit || 'lbs') !== activeUnit && (
-                  <span className="text-xs text-zinc-500 font-mono ml-1">
-                    (equivale a {currentRecord.weight} {currentRecord.unit || 'lbs'})
+                {currentRecord && (currentRecord.reps || 1) > 1 && (
+                  <span className="text-xs text-amber-400 font-bold bg-amber-950/60 border border-amber-700/50 px-2 py-0.5 rounded ml-auto">
+                    {currentRecord.reps}RM
                   </span>
                 )}
               </div>
+
+              {currentRecord && (currentRecord.reps || 1) > 1 && (
+                <div className="p-2 rounded-lg bg-zinc-900 border border-zinc-800 text-xs flex justify-between items-center text-zinc-300">
+                  <span>1RM Estimado Equivalente:</span>
+                  <strong className="text-red-400 font-teko text-lg">
+                    {effective1RM} {activeUnit}
+                  </strong>
+                </div>
+              )}
 
               {/* O probar con peso manual */}
               <div className="mt-3 pt-2.5 border-t border-zinc-800">
@@ -871,16 +913,17 @@ export const RMCalculatorView: React.FC<{ initialExercise?: string }> = ({
 
                 <div>
                   <label className="block text-xs font-bold text-zinc-300 mb-1">
-                    Repeticiones (1RM / 3RM)
+                    Repeticiones / N-RM (ej: 1, 3, 5, 10...)
                   </label>
                   <input
                     type="number"
                     min="1"
-                    max="10"
+                    max="30"
                     required
                     value={formReps}
                     onChange={(e) => setFormReps(Number(e.target.value))}
                     className="w-full rounded-xl border border-zinc-700 bg-black p-2.5 text-xs sm:text-sm text-white focus:border-red-600 focus:outline-none"
+                    placeholder="Ej: 1, 3, 5..."
                   />
                 </div>
               </div>

@@ -14,8 +14,8 @@ import {
   Phone,
   Mail,
   Edit2,
-  Trash2,
   RefreshCw,
+  History,
   X,
   Check,
   Shield,
@@ -55,6 +55,7 @@ export const AthleteManagementView: React.FC = () => {
     setRole,
     slots,
     plans,
+    transactions,
   } = useGym();
 
   const [searchQuery, setSearchQuery] = useState('');
@@ -389,7 +390,20 @@ export const AthleteManagementView: React.FC = () => {
       defaultPlanName.includes('Anual') ? 365 :
       defaultPlanName.includes('Diario') ? 1 : 30
     ));
-    setRenewStartDate(new Date().toISOString().split('T')[0]);
+
+    // Respetar días restantes si la mensualidad actual está vigente
+    const todayStr = new Date().toISOString().split('T')[0];
+    if (ath.membership.isActive && ath.membership.endDate && ath.membership.endDate >= todayStr) {
+      const parts = ath.membership.endDate.split('-');
+      const endD = new Date(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2]));
+      endD.setDate(endD.getDate() + 1);
+      const year = endD.getFullYear();
+      const month = String(endD.getMonth() + 1).padStart(2, '0');
+      const day = String(endD.getDate()).padStart(2, '0');
+      setRenewStartDate(`${year}-${month}-${day}`);
+    } else {
+      setRenewStartDate(todayStr);
+    }
     setIsRenewModalOpen(true);
   };
 
@@ -1742,6 +1756,53 @@ export const AthleteManagementView: React.FC = () => {
             </div>
 
             <form onSubmit={handleRenewSubmit} className="space-y-4 text-xs">
+              {/* Mini Historial de las Últimas 3 Mensualidades / Pagos */}
+              <div className="p-3 rounded-xl bg-zinc-900 border border-zinc-800 space-y-1.5">
+                <div className="flex items-center justify-between text-[11px] font-bold text-zinc-300 pb-1 border-b border-zinc-800">
+                  <span className="flex items-center gap-1.5">
+                    <History className="w-3.5 h-3.5 text-amber-400" />
+                    <span>Últimas 3 Mensualidades / Pagos</span>
+                  </span>
+                  <span className="text-[10px] text-zinc-500 font-normal">Historial Reciente</span>
+                </div>
+                {(() => {
+                  const athleteTxs = (transactions || [])
+                    .filter(
+                      (t) =>
+                        (t.athleteId && t.athleteId === selectedAthlete.id) ||
+                        (t.athleteName && t.athleteName.toLowerCase() === selectedAthlete.name.toLowerCase())
+                    )
+                    .sort((a, b) => (b.timestamp || b.date).localeCompare(a.timestamp || a.date))
+                    .slice(0, 3);
+
+                  if (athleteTxs.length === 0) {
+                    return (
+                      <p className="text-[11px] text-zinc-500 italic py-1 text-center">
+                        Sin historial de pagos registrado previamente.
+                      </p>
+                    );
+                  }
+
+                  return (
+                    <div className="space-y-1.5 pt-1">
+                      {athleteTxs.map((tx) => (
+                        <div key={tx.id} className="flex justify-between items-center text-[11px] bg-black/60 p-2 rounded-lg border border-zinc-850">
+                          <div>
+                            <span className="font-bold text-white block leading-tight">{tx.planName || 'Mensualidad'}</span>
+                            <span className="text-[10px] text-zinc-400">
+                              {tx.date} • {tx.paymentMethod === 'efectivo' ? 'Efectivo' : 'Transferencia'}
+                            </span>
+                          </div>
+                          <span className="font-black text-emerald-400 font-['Teko'] text-sm">
+                            ${tx.amount?.toLocaleString('es-CO')}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  );
+                })()}
+              </div>
+
               <div>
                 <label className="block font-bold text-zinc-300 mb-1.5">Disciplina / Modalidad</label>
                 <div className="grid grid-cols-3 gap-2">

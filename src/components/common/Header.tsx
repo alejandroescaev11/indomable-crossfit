@@ -152,7 +152,7 @@ export const Header: React.FC = () => {
                 className="h-5 sm:h-7 w-auto object-contain filter invert brightness-200"
               />
               <p className="text-[9px] sm:text-[10px] text-zinc-400 font-bold uppercase tracking-widest hidden sm:block leading-none mt-0.5">
-                CrossFit & Performance Box
+                Gimnasio
               </p>
             </div>
           </div>

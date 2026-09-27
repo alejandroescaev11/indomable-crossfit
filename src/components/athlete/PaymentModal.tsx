@@ -208,60 +208,36 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({ isOpen, onClose }) =
             {/* 2. Cuentas Oficiales del Box & Subir Comprobante */}
             <form onSubmit={handleReportPayment} className="space-y-3 pt-1">
               {/* Gym Payment Numbers Box */}
-              <div className="p-3.5 rounded-2xl bg-zinc-900/90 border border-zinc-800 space-y-2 text-xs">
+              <div className="p-3.5 rounded-2xl bg-zinc-900/90 border border-zinc-800 space-y-2.5 text-xs">
                 <div className="flex items-center justify-between pb-2 border-b border-zinc-800">
-                  <span className="font-bold text-zinc-300">Cuentas para Transferencia Directa</span>
+                  <span className="font-bold text-zinc-300">Medios de Pago Oficiales del Gimnasio</span>
                   <span className="text-[10px] text-emerald-400 font-bold bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
-                    0% Comisión
+                    Bancolombia & Efectivo
                   </span>
                 </div>
 
-                {/* Nequi / Bre-B */}
-                <div className="flex items-center justify-between py-0.5">
-                  <div>
-                    <span className="font-bold text-purple-400">Nequi / Llave Bre-B: </span>
-                    <span className="font-mono text-white">{gymSettings?.nequiNumber || '310 123 4567'}</span>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => handleCopy(gymSettings?.nequiNumber || '3101234567', 'nequi')}
-                    className="p-1 px-2 rounded bg-zinc-800 text-zinc-400 hover:text-white text-[10px] flex items-center gap-1 cursor-pointer transition"
-                  >
-                    {copiedAccount === 'nequi' ? <Check className="w-3 h-3 text-emerald-400" /> : <Copy className="w-3 h-3" />}
-                    <span>{copiedAccount === 'nequi' ? 'Copiado' : 'Copiar'}</span>
-                  </button>
-                </div>
-
-                {/* Daviplata */}
-                <div className="flex items-center justify-between py-0.5">
-                  <div>
-                    <span className="font-bold text-red-400">Daviplata: </span>
-                    <span className="font-mono text-white">{gymSettings?.daviplataNumber || '310 123 4567'}</span>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => handleCopy(gymSettings?.daviplataNumber || '3101234567', 'daviplata')}
-                    className="p-1 px-2 rounded bg-zinc-800 text-zinc-400 hover:text-white text-[10px] flex items-center gap-1 cursor-pointer transition"
-                  >
-                    {copiedAccount === 'daviplata' ? <Check className="w-3 h-3 text-emerald-400" /> : <Copy className="w-3 h-3" />}
-                    <span>{copiedAccount === 'daviplata' ? 'Copiado' : 'Copiar'}</span>
-                  </button>
-                </div>
-
                 {/* Bancolombia */}
-                <div className="flex items-center justify-between py-0.5">
+                <div className="flex items-center justify-between py-1">
                   <div>
-                    <span className="font-bold text-amber-400">Bancolombia Ahorros: </span>
+                    <span className="font-bold text-amber-400">Transferencia Bancolombia: </span>
                     <span className="font-mono text-white">{gymSettings?.bancolombiaAccount || '123-456789-00'}</span>
                   </div>
                   <button
                     type="button"
                     onClick={() => handleCopy(gymSettings?.bancolombiaAccount || '123-456789-00', 'banco')}
-                    className="p-1 px-2 rounded bg-zinc-800 text-zinc-400 hover:text-white text-[10px] flex items-center gap-1 cursor-pointer transition"
+                    className="p-1 px-2.5 rounded bg-zinc-800 text-zinc-400 hover:text-white text-[10px] flex items-center gap-1 cursor-pointer transition"
                   >
                     {copiedAccount === 'banco' ? <Check className="w-3 h-3 text-emerald-400" /> : <Copy className="w-3 h-3" />}
-                    <span>{copiedAccount === 'banco' ? 'Copiado' : 'Copiar'}</span>
+                    <span>{copiedAccount === 'banco' ? 'Copiado' : 'Copiar Cta'}</span>
                   </button>
+                </div>
+
+                {/* Pago en Efectivo */}
+                <div className="flex items-center justify-between py-1 border-t border-zinc-850">
+                  <div>
+                    <span className="font-bold text-emerald-400">Pago Directo en Efectivo: </span>
+                    <span className="text-zinc-300 text-[11px]">En la recepción del gimnasio</span>
+                  </div>
                 </div>
               </div>
 
