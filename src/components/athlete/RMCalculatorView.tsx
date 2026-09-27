@@ -263,7 +263,6 @@ export const RMCalculatorView: React.FC<{ initialExercise?: string }> = ({
     setFormReps(record.reps || 1);
     setFormDate(record.date || new Date().toISOString().split('T')[0]);
     setFormNotes(record.notes || '');
-    setIsCustomExerciseInput(false);
     setIsModalOpen(true);
   };
 

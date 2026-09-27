@@ -23,6 +23,13 @@
 
 ---
 
+## 🚀 Versión 0.18.1 (2026-09-27) — Corregido Botón de Editar RMs en RMCalculatorView
+
+### 🐛 Corregido
+- **`RMCalculatorView.tsx`**: Se eliminó una llamada a una función de estado obsoleta (`setIsCustomExerciseInput`) dentro de `handleOpenEditModal`. Esta función causaba un error de ejecución (`ReferenceError`) que impedía desplegar el modal al presionar el ícono del lápiz (Editar RM).
+
+---
+
 ## 🚀 Versión 0.18.0 (2026-09-27) — Esquema Torniquete, Selector KG/LB, N-RM Flexible, Planes & Métodos de Pago (Bancolombia/Efectivo) y Renovación Inteligente
 
 ### ✨ Nuevas Funcionalidades & Mejoras
