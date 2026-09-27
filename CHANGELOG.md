@@ -23,6 +23,16 @@
 
 ---
 
+## 🚀 Versión 0.18.2 (2026-09-27) — Reforzada Acción de Editar RMs (e.stopPropagation & Botón en Calculadora)
+
+### 🐛 Corregido & Mejorado
+- **`RMCalculatorView.tsx`**:
+  - Se agregó `e.stopPropagation()` a los botones de **Editar (`Edit2`)** y **Eliminar (`Trash2`)** en la tabla de RMs para evitar que el clic se propague al manejador de la fila (`<tr>`), previniendo deslazamientos no deseados.
+  - Se incluyó un botón directo de **"Editar Marca"** en la tarjeta/banner destacado del ejercicio seleccionado para permitir editar el RM desde la vista de calculadora.
+  - Se validó el estado de membresía activa para advertir mediante toast si un atleta con plan inactivo/vencido intenta editar.
+
+---
+
 ## 🚀 Versión 0.18.1 (2026-09-27) — Corregido Botón de Editar RMs en RMCalculatorView
 
 ### 🐛 Corregido

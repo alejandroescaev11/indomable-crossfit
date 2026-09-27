@@ -525,7 +525,14 @@ export const RMCalculatorView: React.FC<{ initialExercise?: string }> = ({
                               </button>
                               <button
                                 type="button"
-                                onClick={() => handleOpenEditModal(rec)}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  if (!isMembershipActive) {
+                                    setToastMessage('Tu mensualidad se encuentra vencida o inactiva. Renueva tu plan para editar RMs.');
+                                    return;
+                                  }
+                                  handleOpenEditModal(rec);
+                                }}
                                 className="p-1 rounded-lg hover:bg-zinc-800 text-zinc-400 hover:text-white transition"
                                 title="Editar récord"
                               >
@@ -604,11 +611,19 @@ export const RMCalculatorView: React.FC<{ initialExercise?: string }> = ({
             {currentRecord && (
               <button
                 type="button"
-                onClick={() => handleOpenEditModal(currentRecord)}
-                className="p-1.5 rounded-lg bg-zinc-900 hover:bg-zinc-850 text-zinc-300 hover:text-white border border-zinc-700"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (!isMembershipActive) {
+                    setToastMessage('Tu mensualidad se encuentra vencida o inactiva. Renueva tu plan para editar RMs.');
+                    return;
+                  }
+                  handleOpenEditModal(currentRecord);
+                }}
+                className="p-1.5 rounded-lg bg-zinc-900 hover:bg-zinc-800 text-amber-400 hover:text-amber-300 border border-amber-700/40 transition cursor-pointer flex items-center gap-1 text-xs font-bold"
                 title="Editar este RM"
               >
                 <Edit2 className="w-3.5 h-3.5" />
+                <span>Editar</span>
               </button>
             )}
           </div>
