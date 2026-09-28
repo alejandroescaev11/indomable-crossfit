@@ -14,6 +14,7 @@ import {
   Phone,
   Mail,
   Edit2,
+  Trash2,
   RefreshCw,
   History,
   X,

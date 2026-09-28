@@ -23,6 +23,14 @@
 
 ---
 
+## 🚀 Versión 0.18.3 (2026-09-28) — Corregida Importación de Icono Trash2 en AthleteManagementView
+
+### 🐛 Corregido
+- **`AthleteManagementView.tsx`**: Se reincorporó la importación del icono `Trash2` desde `'lucide-react'`. Al haber sido omitida en la cabecera del módulo, el renderizado de las tarjetas de atletas producía una excepción de ejecución (`ReferenceError: Trash2 is not defined`).
+- **Deploy**: Paquete de producción actualizado (`index-BYjonMnh.js`) compilado y desplegado a Firebase Hosting.
+
+---
+
 ## 🚀 Versión 0.18.2 (2026-09-27) — Reforzada Acción de Editar RMs (e.stopPropagation & Botón en Calculadora)
 
 ### 🐛 Corregido & Mejorado
