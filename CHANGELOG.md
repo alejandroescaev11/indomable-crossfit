@@ -23,6 +23,16 @@
 
 ---
 
+## 🚀 Versión 0.18.4 (2026-09-28) — Desglose Exclusivo de Efectivo & Transferencia en Contabilidad
+
+### 🎨 Ajustes & Mejoras
+- **`AdminAccountingView.tsx`**:
+  - Se modificó la tarjeta de **Desglose por Métodos de Pago** en el panel de Contabilidad para presentar únicamente las opciones de **Efectivo (Pago Directo)** y **Transferencia (Bancolombia)**.
+  - Se agruparon las transacciones electrónicas históricas bajo la categoría de Transferencia y se actualizaron los filtros y desplegables del modal de transacciones manuales.
+- **Deploy**: Paquete de producción actualizado (`index-BL0gFi1z.js`) compilado y desplegado a Firebase Hosting.
+
+---
+
 ## 🚀 Versión 0.18.3 (2026-09-28) — Corregida Importación de Icono Trash2 en AthleteManagementView
 
 ### 🐛 Corregido

@@ -84,7 +84,7 @@ export const AdminAccountingView: React.FC = () => {
   const [txAmount, setTxAmount] = useState('');
   const [txPlanName, setTxPlanName] = useState('Mensual Ilimitado Pro');
   const [txDiscipline, setTxDiscipline] = useState<AthleteDiscipline>('crossfit');
-  const [txMethod, setTxMethod] = useState<PaymentMethod>('nequi');
+  const [txMethod, setTxMethod] = useState<PaymentMethod>('efectivo');
   const [txType, setTxType] = useState<TransactionType>('membership_renewal');
   const [txNotes, setTxNotes] = useState('');
   const [isSubmittingTx, setIsSubmittingTx] = useState(false);
@@ -650,26 +650,23 @@ export const AdminAccountingView: React.FC = () => {
               <span>Desglose por Métodos de Pago</span>
             </h3>
 
-            <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-5 gap-3 pt-1">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1">
               {[
-                { id: 'nequi', label: 'Nequi', color: 'bg-purple-500' },
-                { id: 'daviplata', label: 'Daviplata', color: 'bg-red-500' },
-                { id: 'efectivo', label: 'Efectivo', color: 'bg-emerald-500' },
-                { id: 'breb', label: 'Bre-B', color: 'bg-blue-500' },
-                { id: 'tarjeta', label: 'Tarjeta / PSE / Wompi', color: 'bg-amber-500' },
+                { id: 'efectivo', label: 'Efectivo (Pago Directo)', color: 'bg-emerald-500' },
+                { id: 'transferencia', label: 'Transferencia (Bancolombia)', color: 'bg-amber-500' },
               ].map((methodItem) => {
                 let totalForMethod = 0;
                 let countForMethod = 0;
 
-                if (methodItem.id === 'tarjeta') {
-                  // Group tarjeta, pse, wompi
-                  ['tarjeta', 'pse', 'wompi'].forEach((m) => {
+                if (methodItem.id === 'transferencia') {
+                  // Agrupar transferencia y cualquier otro canal electrónico previo
+                  ['transferencia', 'nequi', 'daviplata', 'pse', 'wompi', 'breb', 'tarjeta', 'otro'].forEach((m) => {
                     totalForMethod += stats.methodStats[m]?.total || 0;
                     countForMethod += stats.methodStats[m]?.count || 0;
                   });
                 } else {
-                  totalForMethod = stats.methodStats[methodItem.id]?.total || 0;
-                  countForMethod = stats.methodStats[methodItem.id]?.count || 0;
+                  totalForMethod = stats.methodStats['efectivo']?.total || 0;
+                  countForMethod = stats.methodStats['efectivo']?.count || 0;
                 }
 
                 const percent = stats.totalIncome > 0 ? Math.round((totalForMethod / stats.totalIncome) * 100) : 0;
@@ -833,14 +830,8 @@ export const AdminAccountingView: React.FC = () => {
                   className="w-full rounded-xl border border-zinc-800 bg-zinc-900 p-2 text-xs text-white focus:border-red-700 focus:outline-none"
                 >
                   <option value="all">Todos los Medios de Pago</option>
-                  <option value="nequi">Nequi</option>
-                  <option value="daviplata">Daviplata</option>
                   <option value="efectivo">Efectivo</option>
-                  <option value="pse">PSE</option>
-                  <option value="wompi">Wompi</option>
-                  <option value="tarjeta">Tarjeta</option>
-                  <option value="breb">Bre-B</option>
-                  <option value="otro">Otro</option>
+                  <option value="transferencia">Transferencia (Bancolombia)</option>
                 </select>
               </div>
             </div>
@@ -1300,14 +1291,8 @@ export const AdminAccountingView: React.FC = () => {
                     onChange={(e) => setTxMethod(e.target.value as any)}
                     className="w-full rounded-xl border border-zinc-800 bg-zinc-900 p-2.5 text-xs text-white focus:border-red-700 focus:outline-none"
                   >
-                    <option value="nequi">Nequi</option>
-                    <option value="daviplata">Daviplata</option>
                     <option value="efectivo">Efectivo</option>
-                    <option value="pse">PSE</option>
-                    <option value="wompi">Wompi</option>
-                    <option value="tarjeta">Tarjeta</option>
-                    <option value="breb">Bre-B</option>
-                    <option value="otro">Otro</option>
+                    <option value="transferencia">Transferencia (Bancolombia)</option>
                   </select>
                 </div>
               </div>
